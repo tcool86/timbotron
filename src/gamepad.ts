@@ -73,7 +73,7 @@ export default class Gamepad {
 		}
 		let horiz = 0;
 		let vert = 0;
-		const [x1, y1, x2, y2] = gamepad.axes;
+		const [x1, y1] = gamepad.axes;
 		horiz = (Math.abs(x1) > 0.1) ? x1 : 0;
 		vert = (Math.abs(y1) > 0.1) ? y1 : 0;
 
