@@ -67,6 +67,13 @@ const gamepad = new Gamepad();
 
 const clock = new Three.Clock();
 
+const testMaterial = new Three.MeshNormalMaterial();
+testMaterial.wireframe = true;
+const testGeometry = new Three.BoxGeometry(0.15, 0.15, 0.15);
+const testMesh = new Three.Mesh(testGeometry, testMaterial);
+testMesh.position.set(1, 1, 1);
+scene.add(testMesh);
+
 async function gameLoop() {
 	// Process User Input
 	const { horiz, vert, a, b } = gamepad.player1();
@@ -90,6 +97,8 @@ async function gameLoop() {
 	plane.position.set(groundVector.x, groundVector.y, groundVector.z);
 	// Update
 	const delta = clock.getDelta();
+	testMesh.rotateY(delta);
+	testMesh.rotateX(delta);
 	world?.step();
 	scene.children.forEach(child => {
 		const rigidBody = meshMap.get(child);
