@@ -4,6 +4,7 @@ export default class Player {
 	material: Three.Material;
 	geometry: Three.BoxGeometry;
 	mesh: Three.Mesh;
+	body: any;
 
 	constructor(scene: Three.Scene) {
 		this.material = new Three.MeshNormalMaterial();

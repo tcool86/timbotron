@@ -1,6 +1,9 @@
 import './style.css'
-import { Game } from './game';
+import Game from './game';
 
 const app = document.querySelector<HTMLDivElement>('#app')!;
 
-app.appendChild(Game);
+const game = new Game();
+game.ready.then(() => {
+	app.appendChild(game.domElement());
+})
