@@ -1,9 +1,9 @@
 import './style.css'
-import Game from './game';
+import PyramidGame from './PyramidGame';
 
 const app = document.querySelector<HTMLDivElement>('#app')!;
 
-const game = new Game();
+const game = new PyramidGame();
 game.ready.then(() => {
 	app.appendChild(game.domElement());
 })

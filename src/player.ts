@@ -1,19 +1,26 @@
-import * as Three from 'three';
+import * as THREE from 'three';
+import { Vector3 } from '@dimforge/rapier3d-compat';
+import PryamidEntity from './PyramidEntity';
+import PryamidStage from './PyramidStage';
 
-export default class Player {
-	material: Three.Material;
-	geometry: Three.BoxGeometry;
-	mesh: Three.Mesh;
-	body: any;
+export default class Player extends PryamidEntity {
 
-	constructor(scene: Three.Scene) {
-		this.material = new Three.MeshNormalMaterial();
-		this.geometry = new Three.BoxGeometry(0.2, 0.2, 0.2);
-
-		this.mesh = new Three.Mesh(this.geometry, this.material);
-		this.mesh.position.y = 0;
-		this.mesh.position.x = 0;
-		scene.add(this.mesh);
+	constructor(stage: PryamidStage) {
+		const size = new THREE.Vector3(0.5, 0.5, 0.5);
+		const position = new THREE.Vector3();
+		super(stage, {
+			size,
+			position
+		});
 		return this;
+	}
+
+	move(moveVector: Vector3) {
+		this.body.applyImpulse(moveVector, true);
+		// this.body.addForce(moveVector, true);
+	}
+
+	update() {
+		super.update();
 	}
 }
