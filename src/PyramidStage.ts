@@ -61,7 +61,7 @@ export default class PryamidStage {
 		const entityIterator = this.children.entries();
 		let entityWrapper;
 		while (entityWrapper = entityIterator.next().value) {
-			const [id, entity] = entityWrapper;
+			const [, entity] = entityWrapper;
 			entity.update();
 		}
 	}
