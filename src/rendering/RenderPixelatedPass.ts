@@ -3,7 +3,6 @@ import { WebGLRenderer, WebGLRenderTarget } from "three"
 import { Pass, FullScreenQuad } from "three/examples/jsm/postprocessing/Pass"
 
 export default class RenderPixelatedPass extends Pass {
-
 	fsQuad: FullScreenQuad
 	resolution: THREE.Vector2
 	scene: THREE.Scene
@@ -20,7 +19,7 @@ export default class RenderPixelatedPass extends Pass {
 		this.camera = camera
 
 		this.rgbRenderTarget = pixelRenderTarget(resolution, THREE.RGBAFormat, true)
-		this.normalRenderTarget = pixelRenderTarget(resolution, THREE.RGBFormat, false)
+		this.normalRenderTarget = pixelRenderTarget(resolution, THREE.RGBAFormat, false)
 
 		this.normalMaterial = new THREE.MeshNormalMaterial()
 	}

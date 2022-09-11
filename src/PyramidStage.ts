@@ -22,8 +22,9 @@ export default class PryamidStage {
 
 		let aspectRatio = screenResolution.x / screenResolution.y;
 
-		const camera = new THREE.OrthographicCamera(-aspectRatio, aspectRatio, 1, -1, 1, 100);
-		camera.position.z = 1;
+		const camera = new THREE.PerspectiveCamera(45, aspectRatio, 0.1, 1000);
+		camera.position.z = 8;
+		camera.position.y = 3 * Math.tan(Math.PI / 3);
 
 		scene.background = new THREE.Color(0x5843c1);
 
@@ -38,9 +39,6 @@ export default class PryamidStage {
 
 		const controls = new OrbitControls(camera, renderer.domElement)
 		controls.target.set(0, 0, 0);
-		camera.position.z = 6;
-		camera.position.y = 2 * Math.tan(Math.PI / 3);
-		camera.position.x = 2 * Math.tan(Math.PI / 3);
 		controls.update();
 
 		this.renderer = renderer;
