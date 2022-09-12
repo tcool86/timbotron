@@ -3,6 +3,7 @@ import * as THREE from 'three';
 import { EffectComposer } from 'three/examples/jsm/postprocessing/EffectComposer';
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
 import RenderPixelatedPass from './rendering/RenderPixelatedPass';
+import { EntityLoader } from './objectLoader';
 import PryamidEntity from './PyramidEntity';
 
 export default class PryamidStage {
@@ -12,6 +13,7 @@ export default class PryamidStage {
 	composer: EffectComposer;
 	children: Map<string, PryamidEntity>;
 	ground: PryamidEntity;
+	clock: THREE.Clock;
 
 	constructor(world: RAPIER.World) {
 		const scene = new THREE.Scene();
@@ -51,6 +53,7 @@ export default class PryamidStage {
 			position: new THREE.Vector3(0, -1, 0),
 			fixed: true,
 		});
+		this.clock = new THREE.Clock();
 		this.setupEntities();
 	}
 
@@ -60,6 +63,10 @@ export default class PryamidStage {
 		let entityWrapper;
 		while (entityWrapper = entityIterator.next().value) {
 			const [, entity] = entityWrapper;
+			if (entity.userData?.hasAnimation) {
+				entity.userData?.mixer.update(this.clock.getDelta());
+				continue;
+			}
 			entity.update();
 		}
 	}
@@ -76,6 +83,8 @@ export default class PryamidStage {
 			})
 			this.children.set(entity.id, entity);
 		}
+		const loader = new EntityLoader();
+		loader.loadEntity(this.scene, this.children);
 	}
 
 }

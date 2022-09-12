@@ -9,6 +9,9 @@ interface EntityOptions {
 	fixed?: boolean;
 }
 
+// Testing conditional types
+// export type GetPyramidEntity<T> = T extends PryamidEntity ? EntityOptions : T extends PyramidStage ? { stageOnly: boolean } : never;
+
 export default class PryamidEntity {
 	id: string;
 	material: THREE.Material;
