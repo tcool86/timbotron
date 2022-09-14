@@ -2,7 +2,7 @@ import * as THREE from 'three';
 import { FBXLoader } from 'three/examples/jsm/loaders/FBXLoader';
 // import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
 // import textureTest from './assets/texture-test.png?url';
-import test from './models/running.fbx?url';
+import test from './models/salsa.fbx?url';
 
 export default function pixelTexture(texture: THREE.Texture) {
 	texture.minFilter = THREE.NearestFilter;
@@ -41,6 +41,7 @@ export class EntityLoader {
 				object.userData = { hasAnimation: true, mixer: this.mixer };
 				action.play();
 				object.scale.set(0.2, 0.2, 0.2);
+				object.position.set(0, -1, -1);
 				scene.add(object);
 				children.set('test-id', object);
 			},
