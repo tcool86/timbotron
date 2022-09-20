@@ -1,4 +1,4 @@
-import PyramidStage from "./PyramidStage";
+import Stage from "./Stage";
 import RAPIER from '@dimforge/rapier3d-compat';
 import * as THREE from 'three';
 
@@ -9,10 +9,7 @@ interface EntityOptions {
 	fixed?: boolean;
 }
 
-// Testing conditional types
-// export type GetPyramidEntity<T> = T extends PryamidEntity ? EntityOptions : T extends PyramidStage ? { stageOnly: boolean } : never;
-
-export default class PryamidEntity {
+export default class Entity {
 	id: string;
 	material: THREE.Material;
 	geometry: THREE.BoxGeometry;
@@ -22,7 +19,7 @@ export default class PryamidEntity {
 	static instanceCounter = 0;
 
 	constructor(
-		stage: PyramidStage,
+		stage: Stage,
 		{
 			size,
 			position,
@@ -52,7 +49,7 @@ export default class PryamidEntity {
 		this.material = material;
 		this.geometry = geometry;
 		this.body = rigidBody;
-		this.id = `e-${PryamidEntity.instanceCounter++}`;
+		this.id = `e-${Entity.instanceCounter++}`;
 	}
 
 	update() {

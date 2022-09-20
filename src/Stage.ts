@@ -4,15 +4,15 @@ import { EffectComposer } from 'three/examples/jsm/postprocessing/EffectComposer
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
 import RenderPixelatedPass from './rendering/RenderPixelatedPass';
 import { EntityLoader } from './objectLoader';
-import PryamidEntity from './PyramidEntity';
+import Entity from './Entity';
 
-export default class PryamidStage {
+export default class Stage {
 	world: RAPIER.World;
 	scene: THREE.Scene;
 	renderer: THREE.WebGLRenderer;
 	composer: EffectComposer;
-	children: Map<string, PryamidEntity>;
-	ground: PryamidEntity;
+	children: Map<string, Entity>;
+	ground: Entity;
 	clock: THREE.Clock;
 
 	constructor(world: RAPIER.World) {
@@ -48,7 +48,7 @@ export default class PryamidStage {
 		this.scene = scene;
 		this.world = world;
 		this.children = new Map();
-		this.ground = new PryamidEntity(this, {
+		this.ground = new Entity(this, {
 			size: new THREE.Vector3(10.0, 0.01, 10.0),
 			position: new THREE.Vector3(0, -1, 0),
 			fixed: true,
@@ -77,7 +77,7 @@ export default class PryamidStage {
 			const startX = (2 - i) * 0.33;
 			const position = new THREE.Vector3(startX, 1.0, 0.0);
 			const size = new THREE.Vector3(1.5, 0.5, 0.5);
-			const entity = new PryamidEntity(this, {
+			const entity = new Entity(this, {
 				size,
 				position
 			})

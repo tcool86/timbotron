@@ -1,11 +1,11 @@
 import * as THREE from 'three';
 import { Vector3 } from '@dimforge/rapier3d-compat';
-import PryamidEntity from './PyramidEntity';
-import PryamidStage from './PyramidStage';
+import Entity from './Entity';
+import Stage from './Stage';
 
-export default class PyramidPlayer extends PryamidEntity {
+export default class Actor extends Entity {
 
-	constructor(stage: PryamidStage) {
+	constructor(stage: Stage) {
 		const size = new THREE.Vector3(0.5, 0.5, 0.5);
 		const position = new THREE.Vector3();
 		super(stage, {

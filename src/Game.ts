@@ -1,13 +1,13 @@
 
 import RAPIER from '@dimforge/rapier3d-compat';
-import PryamidStage from './PyramidStage';
+import Stage from './Stage';
 import Gamepad from './gamepad';
-import PyramidPlayer from './PyramidPlayer';
+import Actor from './Player';
 import { Clock } from 'three';
 
-class PyramidGame {
-	stage?: PryamidStage;
-	players: Map<number, PyramidPlayer>;
+class Game {
+	stage?: Stage;
+	players: Map<number, Actor>;
 	gamepad: Gamepad;
 	clock: any;
 	ready: Promise<boolean>;
@@ -19,9 +19,9 @@ class PyramidGame {
 		this.ready = new Promise((resolve, reject) => {
 			const loadCollision = this.initializeGame();
 			loadCollision.then((world) => {
-				this.stage = new PryamidStage(world);
+				this.stage = new Stage(world);
 
-				const player = new PyramidPlayer(this.stage);
+				const player = new Actor(this.stage);
 				this.players.set(1, player);
 
 				const self = this;
@@ -35,7 +35,7 @@ class PyramidGame {
 		})
 	}
 
-	async gameLoop(self: PyramidGame) {
+	async gameLoop(self: Game) {
 		// Process User Input
 		const { horiz, vert, a, b } = self.gamepad.player1();
 		let moveVector = new RAPIER.Vector3(
@@ -68,4 +68,4 @@ class PyramidGame {
 	}
 }
 
-export default PyramidGame;
+export default Game;
