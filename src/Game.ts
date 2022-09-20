@@ -2,7 +2,7 @@
 import RAPIER from '@dimforge/rapier3d-compat';
 import Stage from './Stage';
 import Gamepad from './gamepad';
-import Actor from './Player';
+import Actor from './Actor';
 import { Clock } from 'three';
 
 class Game {
