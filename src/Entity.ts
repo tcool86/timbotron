@@ -7,6 +7,7 @@ interface EntityOptions {
 	position: THREE.Vector3;
 	rotation?: RAPIER.Rotation;
 	fixed?: boolean;
+	tag?: string;
 }
 
 export default class Entity {
@@ -15,6 +16,7 @@ export default class Entity {
 	geometry: THREE.BoxGeometry;
 	mesh: THREE.Mesh;
 	body: RAPIER.RigidBody;
+	tag: string;
 
 	static instanceCounter = 0;
 
@@ -24,7 +26,8 @@ export default class Entity {
 			size,
 			position,
 			rotation = { x: 0, y: 0, z: 0, w: 0 },
-			fixed = false
+			fixed = false,
+			tag = 'default'
 		}: EntityOptions) {
 		const { world, scene } = stage;
 
@@ -49,6 +52,7 @@ export default class Entity {
 		this.material = material;
 		this.geometry = geometry;
 		this.body = rigidBody;
+		this.tag = tag;
 		this.id = `e-${Entity.instanceCounter++}`;
 	}
 
