@@ -3,8 +3,9 @@ import * as THREE from 'three';
 import { EffectComposer } from 'three/examples/jsm/postprocessing/EffectComposer';
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
 import RenderPixelatedPass from './rendering/RenderPixelatedPass';
-import { EntityLoader } from './objectLoader';
+import { EntityLoader } from '../objectLoader';
 import Entity from './Entity';
+import Actor from './Actor';
 
 export default class Stage {
 	world: RAPIER.World;
@@ -12,6 +13,7 @@ export default class Stage {
 	renderer: THREE.WebGLRenderer;
 	composer: EffectComposer;
 	children: Map<string, Entity>;
+	players?: Map<string, Actor>;
 	ground: Entity;
 	clock: THREE.Clock;
 

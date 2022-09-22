@@ -1,9 +1,19 @@
 import './style.css'
-import Game from './Game';
+import Game from './lib/Game';
 
 const app = document.querySelector<HTMLDivElement>('#app')!;
 
-const game = new Game();
+let counter = 0;
+
+const game = new Game({
+	loop: (ticks: number) => {
+		counter += ticks;
+		if (counter > 2000) {
+			counter = 0;
+			console.log('looping');
+		}
+	}
+});
 game.ready.then(() => {
 	app.appendChild(game.domElement());
 })

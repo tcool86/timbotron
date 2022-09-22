@@ -5,6 +5,11 @@ import Stage from './Stage';
 
 export default class Actor extends Entity {
 
+	animationActions: THREE.AnimationAction[] = [];
+	currentAnimation?: THREE.AnimationAction;
+	lastAction?: THREE.AnimationAction;
+	mixer?: THREE.AnimationMixer;
+
 	constructor(stage: Stage) {
 		const size = new THREE.Vector3(0.5, 0.5, 0.5);
 		const position = new THREE.Vector3();
