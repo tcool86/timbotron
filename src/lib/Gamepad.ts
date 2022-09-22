@@ -1,21 +1,4 @@
 
-interface GamepadButton {
-	pressed: boolean;
-	touched: boolean;
-	value: number;
-}
-
-interface GamepadController {
-	id: string;
-	index: number;
-	connected: boolean;
-	axes: readonly number[];
-	buttons: readonly GamepadButton[];
-	mapping: string;
-	timestamp: number;
-	vibrationActuator?: unknown;
-}
-
 export type GamepadConnections = Map<number, boolean>;
 
 export interface ControllerInput {

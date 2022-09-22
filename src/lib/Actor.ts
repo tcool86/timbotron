@@ -1,5 +1,5 @@
 import * as THREE from 'three';
-import { Vector3, Rotation } from '@dimforge/rapier3d-compat';
+import { Vector3, Rotation, RigidBodyType } from '@dimforge/rapier3d-compat';
 import Entity from './Entity';
 import Stage from './Stage';
 import { ActorPayload } from './ActorLoader';
@@ -25,14 +25,16 @@ export default class Actor extends Entity {
 		this.currentAction.play();
 		this.object.scale.set(0.4, 0.4, 0.4);
 		this.body.lockRotations(true, true);
-		this.body.setAdditionalMass(1, true);
+		this.body.setAdditionalMass(100, true);
+		this.body.setBodyType(RigidBodyType.KinematicVelocityBased);
 		stage.scene.add(this.object);
 		this.id = 'test-id';
 		return this;
 	}
 
 	move(moveVector: Vector3) {
-		this.body.applyImpulse(moveVector, true);
+		// this.body.applyImpulse(moveVector, true);
+		this.body.setLinvel(moveVector, true);
 	}
 
 	update(delta: number) {

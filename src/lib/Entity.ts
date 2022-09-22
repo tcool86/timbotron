@@ -60,7 +60,7 @@ export default class Entity {
 		this.id = `e-${Entity.instanceCounter++}`;
 	}
 
-	update(delta: number) {
+	update(_delta: number) {
 		if (this.mesh) {
 			const translationVector: RAPIER.Vector = this.body.translation();
 			const rotationVector: RAPIER.Rotation = this.body.rotation();

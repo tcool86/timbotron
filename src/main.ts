@@ -5,12 +5,12 @@ import RAPIER from '@dimforge/rapier3d-compat';
 const app = document.querySelector<HTMLDivElement>('#app')!;
 
 const game = new Game({
-	loop: ({ ticks, inputs, player }: LoopInjections) => {
+	loop: ({ inputs, player }: LoopInjections) => {
 		const { horizontal, vertical, buttonA, buttonB } = inputs[0];
 		let moveVector = new RAPIER.Vector3(
-			horizontal,
+			horizontal * 10,
 			(buttonA) || -(buttonB),
-			vertical,
+			vertical * 10,
 		);
 		player.move(moveVector);
 	}

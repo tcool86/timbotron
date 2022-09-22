@@ -77,15 +77,20 @@ export default class Stage {
 
 	// TODO: Temporary
 	async setupEntities() {
-		for (let i = 0; i < 2; i++) {
-			const startX = (2 - i) * 0.33;
-			const position = new THREE.Vector3(startX, 1.0, 0.0);
-			const size = new THREE.Vector3(1, 1, 1);
-			const entity = new Entity(this, {
-				size,
-				position,
-			})
-			this.children.set(entity.id, entity);
+		for (let row = 2; row < 15; row++) {
+			for (let i = 0; i < 20; i++) {
+				const startX = (10 - i) * 0.33;
+				const position = new THREE.Vector3(startX, Math.random() * 5.0, -row);
+				const size = new THREE.Vector3(1, 1, 1);
+				const entity = new Entity(this, {
+					size,
+					position,
+				});
+				entity.body.setAdditionalMass(0.0001, true);
+				entity.body.setAngularDamping(0);
+				entity.body.setBodyType(RAPIER.RigidBodyType.Dynamic);
+				this.children.set(entity.id, entity);
+			}
 		}
 		const loader = new ActorLoader();
 		const actorPayload = await loader.load('');
