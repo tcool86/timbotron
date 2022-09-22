@@ -16,34 +16,43 @@ interface GamepadController {
 	vibrationActuator?: unknown;
 }
 
+export type GamepadConnections = Map<number, boolean>;
+
+export interface ControllerInput {
+	horizontal: number;
+	vertical: number;
+	buttonA: number;
+	buttonB: number;
+	buttonX: number;
+	buttonY: number;
+	select: number;
+	start: number;
+}
+
 export default class Gamepad {
 	hasSupport: boolean;
 	lastConnection: number;
-	controllers: GamepadController[];
+	connections: GamepadConnections = new Map();
 
 	constructor() {
 		this.hasSupport = true;
 		this.lastConnection = -1;
-		this.controllers = [];
 		const interval = setInterval(() => {
 			if (!this.hasSupport) {
 				clearInterval(interval);
 			}
-			if (this.controllers.length > this.lastConnection) {
+			if (this.connections.size > this.lastConnection) {
 				this.scanGamepads();
 			}
 		}, 200);
 		const self = this;
 		window.addEventListener("gamepadconnected", (event: GamepadEvent) => {
 			const { gamepad } = event;
-			console.log(gamepad);
-			if (!self.controllers[gamepad.index]?.connected) {
-				self.controllers[gamepad.index] = gamepad;
-			}
+			self.connections.set(gamepad.index, gamepad.connected);
 		});
 		window.addEventListener("gamepaddisconnected", (event: GamepadEvent) => {
 			const { gamepad } = event;
-			delete this.controllers[gamepad.index];
+			self.connections.delete(gamepad.index);
 		});
 	}
 
@@ -57,27 +66,43 @@ export default class Gamepad {
 			this.hasSupport = false;
 			return;
 		}
-		for (let index in gamepads) {
-			const gamepad = gamepads[index];
-			if (typeof gamepad?.index === 'number') {
-				this.controllers[gamepad?.index] = gamepad;
-			}
-		}
 		this.lastConnection = gamepads.length;
 	}
 
-	player1() {
-		const [gamepad] = navigator.getGamepads();
-		if (gamepad === null) {
-			return { horiz: 0, vert: 0, a: 0, b: 0 };
+	getInputAtIndex(index: number): ControllerInput {
+		const gamepad = navigator.getGamepads()[index];
+		const connected = this.connections.get(index);
+		if (!connected || !gamepad) {
+			return {
+				horizontal: 0,
+				vertical: 0,
+				buttonA: 0,
+				buttonB: 0,
+				buttonX: 0,
+				buttonY: 0,
+				select: 0,
+				start: 0,
+			};
 		}
-		let horiz = 0;
-		let vert = 0;
+		let horizontal = 0;
+		let vertical = 0;
 		const [x1, y1] = gamepad.axes;
-		horiz = (Math.abs(x1) > 0.1) ? x1 : 0;
-		vert = (Math.abs(y1) > 0.1) ? y1 : 0;
+		horizontal = (Math.abs(x1) > 0.1) ? x1 : 0;
+		vertical = (Math.abs(y1) > 0.1) ? y1 : 0;
+		return {
+			horizontal,
+			vertical,
+			buttonA: gamepad.buttons[0].value,
+			buttonB: gamepad.buttons[1].value,
+			buttonX: 0,
+			buttonY: 0,
+			select: 0,
+			start: 0,
+		};
+	}
 
-		return { horiz, vert, a: gamepad.buttons[0].value, b: gamepad.buttons[1].value };
+	getInputs() {
+		return [this.getInputAtIndex(0)];
 	}
 
 }

@@ -1,17 +1,18 @@
 import './style.css'
-import Game from './lib/Game';
+import Game, { LoopInjections } from './lib/Game';
+import RAPIER from '@dimforge/rapier3d-compat';
 
 const app = document.querySelector<HTMLDivElement>('#app')!;
 
-let counter = 0;
-
 const game = new Game({
-	loop: (ticks: number) => {
-		counter += ticks;
-		if (counter > 2000) {
-			counter = 0;
-			console.log('looping');
-		}
+	loop: ({ ticks, inputs, player }: LoopInjections) => {
+		const { horizontal, vertical, buttonA, buttonB } = inputs[0];
+		let moveVector = new RAPIER.Vector3(
+			horizontal,
+			(buttonA) || -(buttonB),
+			vertical,
+		);
+		player.move(moveVector);
 	}
 });
 game.ready.then(() => {

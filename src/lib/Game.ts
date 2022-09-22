@@ -2,12 +2,19 @@
 import RAPIER from '@dimforge/rapier3d-compat';
 import Stage from './Stage';
 import { Menu } from './Menu';
-import Gamepad from '../gamepad';
+import Gamepad, { ControllerInput } from './Gamepad';
 
 import { Clock } from 'three';
+import Actor from './Actor';
+
+export interface LoopInjections {
+	ticks: number;
+	inputs: ControllerInput[];
+	player: Actor;
+}
 
 interface GameOptions {
-	loop: (ticks: number) => void;
+	loop: ({ }: LoopInjections) => void;
 }
 
 class Game {
@@ -16,7 +23,7 @@ class Game {
 	menu?: Menu;
 	loop: Function;
 	gamepad: Gamepad;
-	clock: any;
+	clock: Clock;
 	ready: Promise<boolean>;
 
 	constructor({ loop }: GameOptions) {
@@ -27,7 +34,7 @@ class Game {
 			try {
 				const world = await this.loadPhysics();
 				this.stages.push(new Stage(world));
-
+				await this.stage().setupEntities();
 				const self = this;
 				requestAnimationFrame(() => {
 					self.gameLoop(self)
@@ -46,28 +53,36 @@ class Game {
 		return world;
 	}
 
+	/**
+	 * Main game loop
+	 * process user input
+	 * update physics
+	 * render scene
+	 */
 	async gameLoop(self: Game) {
-		// Process User Input
-		// const { horiz, vert, a, b } = self.gamepad.player1();
-		// let moveVector = new RAPIER.Vector3(
-		// 	horiz / 10,
-		// 	(a / 10) || -(b / 10),
-		// 	vert / 10,
-		// );
-		this.stages[this.currentStage].update();
+		const inputs = this.gamepad.getInputs();
+		const ticks = this.clock.getDelta();
+		this.stage().update(ticks);
 
-		const ticks = this.clock.getElapsedTime();
-		this.loop(ticks);
+		const player = this.stage().getPlayer();
+		this.loop({
+			ticks,
+			inputs,
+			player
+		});
 
-		// Render
-		this.stages[this.currentStage].composer?.render();
+		this.stage().render();
 		requestAnimationFrame(() => {
 			self.gameLoop(self);
 		});
 	}
 
+	stage() {
+		return this.stages[this.currentStage];
+	}
+
 	domElement() {
-		const element = this.stages[this.currentStage].renderer.domElement ?? document.createElementNS('http://www.w3.org/1999/xhtml', 'canvas');
+		const element = this.stage().renderer.domElement ?? document.createElementNS('http://www.w3.org/1999/xhtml', 'canvas');
 		return element;
 	}
 }

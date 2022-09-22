@@ -7,14 +7,15 @@ interface EntityOptions {
 	position: THREE.Vector3;
 	rotation?: RAPIER.Rotation;
 	fixed?: boolean;
+	hasMesh?: boolean;
 	tag?: string;
 }
 
 export default class Entity {
 	id: string;
-	material: THREE.Material;
-	geometry: THREE.BoxGeometry;
-	mesh: THREE.Mesh;
+	material?: THREE.Material;
+	geometry?: THREE.BoxGeometry;
+	mesh?: THREE.Mesh;
 	body: RAPIER.RigidBody;
 	tag: string;
 
@@ -27,7 +28,8 @@ export default class Entity {
 			position,
 			rotation = { x: 0, y: 0, z: 0, w: 0 },
 			fixed = false,
-			tag = 'default'
+			tag = 'default',
+			hasMesh = true,
 		}: EntityOptions) {
 		const { world, scene } = stage;
 
@@ -41,26 +43,30 @@ export default class Entity {
 		let colliderDesc = RAPIER.ColliderDesc.cuboid(size.x / 2, size.y / 2, size.z / 2);
 		world.createCollider(colliderDesc, rigidBody);
 
-		const material = new THREE.MeshNormalMaterial();
-		const geometry = new THREE.BoxGeometry(size.x, size.y, size.z);
+		if (hasMesh) {
+			const material = new THREE.MeshNormalMaterial();
+			const geometry = new THREE.BoxGeometry(size.x, size.y, size.z);
 
-		const mesh = new THREE.Mesh(geometry, material);
-		mesh.position.set(position.x, position.y, position.z);
-		scene.add(mesh);
+			const mesh = new THREE.Mesh(geometry, material);
+			mesh.position.set(position.x, position.y, position.z);
+			scene.add(mesh);
+			this.mesh = mesh;
+			this.material = material;
+			this.geometry = geometry;
+		}
 
-		this.mesh = mesh;
-		this.material = material;
-		this.geometry = geometry;
 		this.body = rigidBody;
 		this.tag = tag;
 		this.id = `e-${Entity.instanceCounter++}`;
 	}
 
-	update() {
-		const translationVector: RAPIER.Vector = this.body.translation();
-		const rotationVector: RAPIER.Rotation = this.body.rotation();
-		this.mesh.position.set(translationVector.x, translationVector.y, translationVector.z);
-		this.mesh.rotation.set(rotationVector.x, rotationVector.y, rotationVector.z);
+	update(delta: number) {
+		if (this.mesh) {
+			const translationVector: RAPIER.Vector = this.body.translation();
+			const rotationVector: RAPIER.Rotation = this.body.rotation();
+			this.mesh.position.set(translationVector.x, translationVector.y, translationVector.z);
+			this.mesh.rotation.set(rotationVector.x, rotationVector.y, rotationVector.z);
+		}
 	}
 
 

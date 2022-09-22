@@ -3,7 +3,7 @@ import * as THREE from 'three';
 import { EffectComposer } from 'three/examples/jsm/postprocessing/EffectComposer';
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
 import RenderPixelatedPass from './rendering/RenderPixelatedPass';
-import { EntityLoader } from '../objectLoader';
+import { ActorLoader } from './ActorLoader';
 import Entity from './Entity';
 import Actor from './Actor';
 
@@ -15,7 +15,6 @@ export default class Stage {
 	children: Map<string, Entity>;
 	players?: Map<string, Actor>;
 	ground: Entity;
-	clock: THREE.Clock;
 
 	constructor(world: RAPIER.World) {
 		const scene = new THREE.Scene();
@@ -27,8 +26,8 @@ export default class Stage {
 		let aspectRatio = screenResolution.x / screenResolution.y;
 
 		const camera = new THREE.PerspectiveCamera(45, aspectRatio, 0.1, 1000);
-		camera.position.z = 8;
-		camera.position.y = 3 * Math.tan(Math.PI / 3);
+		camera.position.z = 20;
+		camera.position.y = 6 * Math.tan(Math.PI / 3);
 
 		scene.background = new THREE.Color(0x5843c1);
 
@@ -51,42 +50,47 @@ export default class Stage {
 		this.world = world;
 		this.children = new Map();
 		this.ground = new Entity(this, {
-			size: new THREE.Vector3(10.0, 0.01, 10.0),
+			size: new THREE.Vector3(100.0, 0.01, 100.0),
 			position: new THREE.Vector3(0, -1, 0),
 			fixed: true,
 		});
-		this.clock = new THREE.Clock();
-		this.setupEntities();
 	}
 
-	update() {
+	update(delta: number) {
 		this.world.step();
 		const entityIterator = this.children.entries();
 		let entityWrapper;
 		while (entityWrapper = entityIterator.next().value) {
 			const [, entity] = entityWrapper;
-			if (entity.userData?.hasAnimation) {
-				entity.userData?.mixer.update(this.clock.getDelta());
-				continue;
-			}
-			entity.update();
+			entity.update(delta);
 		}
 	}
 
+	render() {
+		this.composer.render();
+	}
+
+	getPlayer() {
+		// return player node
+		return this.children.get('test-id');
+	}
+
 	// TODO: Temporary
-	setupEntities() {
+	async setupEntities() {
 		for (let i = 0; i < 2; i++) {
 			const startX = (2 - i) * 0.33;
 			const position = new THREE.Vector3(startX, 1.0, 0.0);
-			const size = new THREE.Vector3(1.5, 0.5, 0.5);
+			const size = new THREE.Vector3(1, 1, 1);
 			const entity = new Entity(this, {
 				size,
-				position
+				position,
 			})
 			this.children.set(entity.id, entity);
 		}
-		const loader = new EntityLoader();
-		loader.loadEntity(this.scene, this.children);
+		const loader = new ActorLoader();
+		const actorPayload = await loader.load('');
+		const player = new Actor(this, actorPayload);
+		this.children.set(player.id, player);
 	}
 
 }
