@@ -16,6 +16,7 @@ export default class Gamepad {
 	hasSupport: boolean;
 	lastConnection: number;
 	connections: GamepadConnections = new Map();
+	keyboardInput: Map<string, boolean> = new Map();
 
 	constructor() {
 		this.hasSupport = true;
@@ -37,6 +38,14 @@ export default class Gamepad {
 			const { gamepad } = event;
 			self.connections.delete(gamepad.index);
 		});
+		window.addEventListener("keydown", (event) => {
+			const { key } = event;
+			this.keyboardInput.set(key, true);
+		});
+		window.addEventListener("keyup", (event) => {
+			const { key } = event;
+			this.keyboardInput.set(key, false);
+		});
 	}
 
 	scanGamepads() {
@@ -55,28 +64,41 @@ export default class Gamepad {
 	getInputAtIndex(index: number): ControllerInput {
 		const gamepad = navigator.getGamepads()[index];
 		const connected = this.connections.get(index);
+
+		const up = this.keyboardInput.get('ArrowUp');
+		const down = this.keyboardInput.get('ArrowDown');
+		const left = this.keyboardInput.get('ArrowLeft');
+		const right = this.keyboardInput.get('ArrowRight');
+		const z = this.keyboardInput.get('z');
+		const x = this.keyboardInput.get('x');
+
+		let horizontal = 0 || (right) ? 1 : 0 || (left) ? -1 : 0;
+		let vertical = 0 || (up) ? -1 : 0 || (down) ? 1 : 0;;
+		let buttonA = 0 || (z) ? 1 : 0;
+		let buttonB = 0 || (x) ? 1 : 0;
+
 		if (!connected || !gamepad) {
 			return {
-				horizontal: 0,
-				vertical: 0,
-				buttonA: 0,
-				buttonB: 0,
+				horizontal: horizontal,
+				vertical: vertical,
+				buttonA,
+				buttonB,
 				buttonX: 0,
 				buttonY: 0,
 				select: 0,
 				start: 0,
 			};
 		}
-		let horizontal = 0;
-		let vertical = 0;
 		const [x1, y1] = gamepad.axes;
-		horizontal = (Math.abs(x1) > 0.1) ? x1 : 0;
-		vertical = (Math.abs(y1) > 0.1) ? y1 : 0;
+		horizontal = (Math.abs(x1) > 0.1) ? x1 : horizontal;
+		vertical = (Math.abs(y1) > 0.1) ? y1 : vertical;
+		buttonA = gamepad.buttons[0].value || buttonA;
+		buttonB = gamepad.buttons[1].value || buttonB;
 		return {
 			horizontal,
 			vertical,
-			buttonA: gamepad.buttons[0].value,
-			buttonB: gamepad.buttons[1].value,
+			buttonA,
+			buttonB,
 			buttonX: 0,
 			buttonY: 0,
 			select: 0,
