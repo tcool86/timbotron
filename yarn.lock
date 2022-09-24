@@ -1653,6 +1653,11 @@ validate-npm-package-license@^3.0.1:
     spdx-correct "^3.0.0"
     spdx-expression-parse "^3.0.0"
 
+vite-plugin-dynamic-import@^1.2.2:
+  version "1.2.2"
+  resolved "https://registry.yarnpkg.com/vite-plugin-dynamic-import/-/vite-plugin-dynamic-import-1.2.2.tgz#700b3ebf42b5e80fdc4c117ce96d265434e6118e"
+  integrity sha512-50m5Whh9ZLzJouIcHhSzlcrieXx3YUiWAel4twcaNvZIlV9AbRud8e1qAunzpHZKTKPwujhkZps3O6XwebRGLg==
+
 vite@^2.9.9:
   version "2.9.14"
   resolved "https://registry.yarnpkg.com/vite/-/vite-2.9.14.tgz#c438324c6594afd1050df3777da981dee988bb1b"
