@@ -29,14 +29,13 @@ export default class Gamepad {
 				this.scanGamepads();
 			}
 		}, 200);
-		const self = this;
 		window.addEventListener("gamepadconnected", (event: GamepadEvent) => {
 			const { gamepad } = event;
-			self.connections.set(gamepad.index, gamepad.connected);
+			this.connections.set(gamepad.index, gamepad.connected);
 		});
 		window.addEventListener("gamepaddisconnected", (event: GamepadEvent) => {
 			const { gamepad } = event;
-			self.connections.delete(gamepad.index);
+			this.connections.delete(gamepad.index);
 		});
 		window.addEventListener("keydown", (event) => {
 			const { key } = event;
@@ -109,5 +108,4 @@ export default class Gamepad {
 	getInputs() {
 		return [this.getInputAtIndex(0)];
 	}
-
 }
