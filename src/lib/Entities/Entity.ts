@@ -1,4 +1,4 @@
-import Stage from "./Stage";
+import Stage from "../Stage";
 import RAPIER from '@dimforge/rapier3d-compat';
 import * as THREE from 'three';
 

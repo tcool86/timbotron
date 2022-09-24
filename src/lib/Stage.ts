@@ -4,7 +4,7 @@ import { EffectComposer } from 'three/examples/jsm/postprocessing/EffectComposer
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
 import RenderPixelatedPass from './rendering/RenderPixelatedPass';
 import { ActorLoader } from './ActorLoader';
-import Entity from './Entity';
+import Entity from './Entities/Entity';
 import Actor from './Actor';
 
 export default class Stage {

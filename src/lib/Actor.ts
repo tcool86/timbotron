@@ -1,6 +1,6 @@
 import * as THREE from 'three';
 import { Vector3, Rotation, RigidBodyType } from '@dimforge/rapier3d-compat';
-import Entity from './Entity';
+import Entity from './Entities/Entity';
 import Stage from './Stage';
 import { ActorPayload } from './ActorLoader';
 
