@@ -82,7 +82,7 @@ export default class Stage {
 
 	// TODO: Temporary
 	async setupEntities() {
-		for (let row = 2; row < 15; row++) {
+		for (let row = 2; row < 12; row++) {
 			for (let i = 0; i < 20; i++) {
 				const startX = (10 - i) * 0.33;
 				const position = new THREE.Vector3(startX, Math.random() * 5.0, -row);

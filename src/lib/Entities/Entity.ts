@@ -44,7 +44,8 @@ export default class Entity {
 		let colliderDesc = RAPIER.ColliderDesc.cuboid(size.x / 2, size.y / 2, size.z / 2);
 		world.createCollider(colliderDesc, rigidBody);
 
-		const path = imageTest.slice(0, 12);
+		const nameLength = ("texture-test.png").length;
+		const path = imageTest.slice(0, -nameLength);
 		console.log(path);
 		const textureName = (fixed) ? 'grass.jpg' : 'texture-test.png';
 		const textureNormalName = (fixed) ? 'grass-normal.png' : 'texture-test.png';
