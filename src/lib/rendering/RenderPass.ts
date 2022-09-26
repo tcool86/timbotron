@@ -1,10 +1,10 @@
-import * as THREE from "three"
-import fragmentShader from './fragment-shaders/pixelated.fx?raw';
+import * as THREE from "three";
+import fragmentShader from './fragment-shaders/standard.fx?raw';
 import vertexShader from './vertex-shaders/standard.fx?raw';
-import { WebGLRenderer, WebGLRenderTarget } from "three"
-import { Pass, FullScreenQuad } from "three/examples/jsm/postprocessing/Pass"
+import { WebGLRenderer, WebGLRenderTarget } from "three";
+import { Pass, FullScreenQuad } from "three/examples/jsm/postprocessing/Pass";
 
-export default class RenderPixelatedPass extends Pass {
+export default class RenderPass extends Pass {
 	fsQuad: FullScreenQuad
 	resolution: THREE.Vector2
 	scene: THREE.Scene
@@ -14,14 +14,14 @@ export default class RenderPixelatedPass extends Pass {
 	normalMaterial: THREE.Material
 
 	constructor(resolution: THREE.Vector2, scene: THREE.Scene, camera: THREE.Camera) {
-		super();
+		super()
 		this.resolution = resolution;
 		this.fsQuad = new FullScreenQuad(this.material());
 		this.scene = scene;
 		this.camera = camera;
 
-		this.rgbRenderTarget = pixelRenderTarget(resolution, THREE.RGBAFormat, true);
-		this.normalRenderTarget = pixelRenderTarget(resolution, THREE.RGBAFormat, false);
+		this.rgbRenderTarget = new WebGLRenderTarget(resolution.x * 4, resolution.y * 4);
+		this.normalRenderTarget = new WebGLRenderTarget(resolution.x * 4, resolution.y * 4);
 
 		this.normalMaterial = new THREE.MeshNormalMaterial();
 	}
@@ -69,28 +69,7 @@ export default class RenderPixelatedPass extends Pass {
 				}
 			},
 			vertexShader: vertexShader,
-			fragmentShader: fragmentShader,
-		});
+			fragmentShader: fragmentShader
+		})
 	}
-}
-
-function pixelRenderTarget(resolution: THREE.Vector2, pixelFormat: THREE.PixelFormat, depthTexture: boolean) {
-	const renderTarget = new WebGLRenderTarget(
-		resolution.x, resolution.y,
-		!depthTexture ?
-			undefined
-			: {
-				depthTexture: new THREE.DepthTexture(
-					resolution.x,
-					resolution.y
-				),
-				depthBuffer: true
-			}
-	);
-	renderTarget.texture.format = pixelFormat;
-	renderTarget.texture.minFilter = THREE.NearestFilter;
-	renderTarget.texture.magFilter = THREE.NearestFilter;
-	renderTarget.texture.generateMipmaps = false;
-	renderTarget.stencilBuffer = false;
-	return renderTarget;
 }
