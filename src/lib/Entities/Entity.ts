@@ -1,5 +1,7 @@
 import Stage from "../Stage";
-import imageTest from '../../assets/texture-test.png?url';
+import textureTest from '../../assets/texture-test.png?url';
+import grassTest from '../../assets/grass.jpg?url';
+import grassNormalTest from '../../assets/grass-normal.png?url';
 import RAPIER from '@dimforge/rapier3d-compat';
 import * as THREE from 'three';
 
@@ -44,15 +46,12 @@ export default class Entity {
 		let colliderDesc = RAPIER.ColliderDesc.cuboid(size.x / 2, size.y / 2, size.z / 2);
 		world.createCollider(colliderDesc, rigidBody);
 
-		const nameLength = imageTest.length - ("texture-test.png").length;
-		const path = imageTest.slice(0, nameLength);
-		console.log(imageTest);
-		const textureName = (fixed) ? 'grass.jpg' : 'texture-test.png';
-		const textureNormalName = (fixed) ? 'grass-normal.png' : 'texture-test.png';
+		const textureName = (fixed) ? grassTest : textureTest;
+		const textureNormalName = (fixed) ? grassNormalTest : textureTest;
 
 		if (hasMesh) {
 			const loader = new THREE.TextureLoader();
-			loader.setPath(path);
+			loader.setPath('');
 
 			const textureCube = loader.load(textureName);
 			const textureNormal = loader.load(textureNormalName);
