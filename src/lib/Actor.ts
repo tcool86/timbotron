@@ -11,8 +11,8 @@ export default class Actor extends Entity {
 	mixer: THREE.AnimationMixer;
 
 	constructor(stage: Stage, payload: ActorPayload) {
-		const size = new THREE.Vector3(0.5, 0.5, 0.5);
-		const position = new THREE.Vector3(3, 0, 0);
+		const size = new THREE.Vector3(1, 1, 1);
+		const position = new THREE.Vector3(3, -1, 0);
 		super(stage, {
 			size,
 			position,
@@ -23,7 +23,7 @@ export default class Actor extends Entity {
 		this.mixer = payload.mixer;
 		this.object = payload.object;
 		this.currentAction.play();
-		this.object.scale.set(0.4, 0.4, 0.4);
+		this.object.scale.set(0.5, 0.5, 0.5);
 		this.body.lockRotations(true, true);
 		this.body.setAdditionalMass(100, true);
 		this.body.setBodyType(RigidBodyType.KinematicVelocityBased);

@@ -35,6 +35,10 @@ export default class Stage {
 		const ambientLight = new THREE.AmbientLight(0xffffff);
 		scene.add(ambientLight);
 
+		const pointLight = new THREE.PointLight(0xFFF, 5.0, 50.0);
+		pointLight.position.set(0, -1, 0);
+		scene.add(pointLight);
+
 		const renderer = new THREE.WebGLRenderer({ antialias: false });
 		renderer.setSize(screenResolution.x, screenResolution.y);
 

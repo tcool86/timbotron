@@ -1,4 +1,5 @@
 import Stage from "../Stage";
+import imageTest from '../../assets/texture-test.png?url';
 import RAPIER from '@dimforge/rapier3d-compat';
 import * as THREE from 'three';
 
@@ -43,8 +44,33 @@ export default class Entity {
 		let colliderDesc = RAPIER.ColliderDesc.cuboid(size.x / 2, size.y / 2, size.z / 2);
 		world.createCollider(colliderDesc, rigidBody);
 
+		const path = imageTest.slice(0, 12);
+		console.log(path);
+		const textureName = (fixed) ? 'grass.jpg' : 'texture-test.png';
+		const textureNormalName = (fixed) ? 'grass-normal.png' : 'texture-test.png';
+
 		if (hasMesh) {
-			const material = new THREE.MeshNormalMaterial();
+			const loader = new THREE.TextureLoader();
+			loader.setPath(path);
+
+			const textureCube = loader.load(textureName);
+			const textureNormal = loader.load(textureNormalName);
+
+			if (fixed) {
+				textureCube.repeat = new THREE.Vector2(4.0, 4.0);
+				textureCube.wrapS = THREE.RepeatWrapping;
+				textureCube.wrapT = THREE.RepeatWrapping;
+				textureNormal.repeat = new THREE.Vector2(4.0, 4.0);
+				textureNormal.wrapS = THREE.RepeatWrapping;
+				textureNormal.wrapT = THREE.RepeatWrapping;
+			}
+			const material = new THREE.MeshPhongMaterial({
+				color: 0xffffff,
+				map: textureCube,
+				bumpMap: textureNormal,
+				bumpScale: 2
+			});
+
 			const geometry = new THREE.BoxGeometry(size.x, size.y, size.z);
 
 			const mesh = new THREE.Mesh(geometry, material);
