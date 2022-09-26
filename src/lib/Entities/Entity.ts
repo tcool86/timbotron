@@ -46,7 +46,7 @@ export default class Entity {
 
 		const nameLength = imageTest.length - ("texture-test.png").length;
 		const path = imageTest.slice(0, nameLength);
-		console.log(path);
+		console.log(imageTest);
 		const textureName = (fixed) ? 'grass.jpg' : 'texture-test.png';
 		const textureNormalName = (fixed) ? 'grass-normal.png' : 'texture-test.png';
 
