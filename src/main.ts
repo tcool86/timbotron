@@ -1,8 +1,15 @@
 import './style.css'
-import Game, { LoopInjections } from './lib/Game';
+import Pyramid, { LoopInjections } from './index';
 import RAPIER from '@dimforge/rapier3d-compat';
 
 const app = document.querySelector<HTMLDivElement>('#app')!;
+
+const { Game, Globals } = Pyramid();
+
+const globals = new Globals({
+	score: 0,
+	player: { x: 0, z: 0 }
+})
 
 const game = new Game({
 	loop: ({ inputs, player }: LoopInjections) => {
@@ -13,9 +20,21 @@ const game = new Game({
 			vertical * 10,
 		);
 		player.move(moveVector);
+		globals.update(
+			{
+				player: {
+					x: player.object.position.x,
+					z: player.object.position.z,
+				}
+			}
+		);
+		if (buttonA) {
+			console.log(globals.current());
+		}
 	}
 });
 game.ready.then(() => {
+	console.log(globals.current());
 	app.appendChild(game.domElement());
 })
 

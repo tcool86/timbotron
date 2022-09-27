@@ -2,7 +2,7 @@ import RAPIER from '@dimforge/rapier3d-compat';
 import * as THREE from 'three';
 import { EffectComposer } from 'three/examples/jsm/postprocessing/EffectComposer';
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
-// import RenderPixelatedPass from './rendering/RenderPixelatedPass';
+// import RenderPass from './rendering/RenderPixelatedPass';
 import RenderPass from './rendering/RenderPass';
 import { ActorLoader } from './ActorLoader';
 import Entity from './Entities/Entity';

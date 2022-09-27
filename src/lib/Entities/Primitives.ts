@@ -15,12 +15,11 @@ interface EntityOption {
 	x?: number;
 	y?: number;
 	z?: number;
+	fixed?: boolean;
 }
 
 export function createRectangleEntity(options: EntityOption) {
 	console.log(options);
 }
-
-export function createFixedRectangleEntity() { }
 
 export function createSphereEntity() { }
