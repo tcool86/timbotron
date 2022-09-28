@@ -46,9 +46,11 @@ export default class Entity implements EntityBuilder {
 	}
 
 	sphericalMesh(radius: number, position: Vector3) {
+		const { scene } = this.stageRef;
 		const geometry = new THREE.SphereGeometry(radius);
-		this.mesh = new THREE.Mesh(geometry);
+		this.mesh = new THREE.Mesh(geometry, this.material);
 		this.mesh.position.set(position.x, position.y, position.z);
+		scene.add(this.mesh);
 	}
 
 	noMesh() { }

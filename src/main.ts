@@ -14,7 +14,7 @@ const globals = new Globals({
 
 const game = new Game({
 	setup: ({ primitives, materials }: SetupInterface) => {
-		const { createBox } = primitives;
+		const { createBox, createSphere } = primitives;
 		const { metal } = materials;
 
 		const box = createBox({
@@ -26,7 +26,15 @@ const game = new Game({
 			height: 3,
 			depth: 2
 		});
+		const sphere = createSphere({
+			color: 0x880000,
+			texture: 'name',
+			material: metal,
+			position: new RAPIER.Vector3(-3, 0.5, 10),
+			radius: 2.0
+		});
 		console.log(box);
+		console.log(sphere);
 	},
 	loop: ({ inputs, player }: LoopInterface) => {
 		const { horizontal, vertical, buttonA, buttonB } = inputs[0];
