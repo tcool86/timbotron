@@ -1,5 +1,4 @@
 import * as THREE from 'three';
-import RAPIER from '@dimforge/rapier3d-compat';
 import Stage from '../Stage';
 import { Vector3 } from '../Game';
 import Entity from './Entity';
