@@ -2,7 +2,7 @@
 import RAPIER from '@dimforge/rapier3d-compat';
 import Stage from './Stage';
 import { Menu } from './Menu';
-import Entity, { EntityOptions } from './Entities/Entity';
+import Entity from './Entities/Entity';
 import { Primitives, PrimitiveOptions } from './Entities/Primitives';
 import { materials } from './Entities/Materials';
 import Gamepad, { ControllerInput } from './Gamepad';
