@@ -54,11 +54,13 @@ export default class Stage {
 		this.scene = scene;
 		this.world = world;
 		this.children = new Map();
-		this.ground = new Entity(this, {
-			size: new THREE.Vector3(100.0, 0.01, 100.0),
-			position: new THREE.Vector3(0, -1, 0),
-			fixed: true,
-		});
+		this.ground = new Entity(this, 'ground');
+		const groundSize = new THREE.Vector3(100, 1, 100);
+		this.ground.applyTexture();
+		this.ground.rectangularMesh(groundSize, new THREE.Vector3(0, 0, 0));
+		this.ground.createBody();
+		this.ground.collisionRectangular(groundSize);
+		this.ground.collisionStatic();
 	}
 
 	update(delta: number) {
@@ -82,21 +84,6 @@ export default class Stage {
 
 	// TODO: Temporary
 	async setupEntities() {
-		for (let row = 2; row < 12; row++) {
-			for (let i = 0; i < 20; i++) {
-				const startX = (10 - i) * 0.33;
-				const position = new THREE.Vector3(startX, Math.random() * 5.0, -row);
-				const size = new THREE.Vector3(1, 1, 1);
-				const entity = new Entity(this, {
-					size,
-					position,
-				});
-				entity.body.setAdditionalMass(0.0001, true);
-				entity.body.setAngularDamping(0);
-				entity.body.setBodyType(RAPIER.RigidBodyType.Dynamic);
-				this.children.set(entity.id, entity);
-			}
-		}
 		const loader = new ActorLoader();
 		const actorPayload = await loader.load('');
 		const player = new Actor(this, actorPayload);

@@ -1,6 +1,7 @@
 import './style.css'
-import Pyramid, { LoopInjections } from './index';
+import Pyramid, { LoopInterface } from './index';
 import RAPIER from '@dimforge/rapier3d-compat';
+import { SetupInterface } from './lib/Game';
 
 const app = document.querySelector<HTMLDivElement>('#app')!;
 
@@ -12,7 +13,22 @@ const globals = new Globals({
 })
 
 const game = new Game({
-	loop: ({ inputs, player }: LoopInjections) => {
+	setup: ({ primitives, materials }: SetupInterface) => {
+		const { createBox } = primitives;
+		const { metal } = materials;
+
+		const box = createBox({
+			color: 0x880000,
+			texture: 'name',
+			material: metal,
+			position: new RAPIER.Vector3(-3, 0.5, 3),
+			width: 2,
+			height: 3,
+			depth: 2
+		});
+		console.log(box);
+	},
+	loop: ({ inputs, player }: LoopInterface) => {
 		const { horizontal, vertical, buttonA, buttonB } = inputs[0];
 		let moveVector = new RAPIER.Vector3(
 			horizontal * 10,

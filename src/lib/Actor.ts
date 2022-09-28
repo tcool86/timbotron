@@ -13,12 +13,9 @@ export default class Actor extends Entity {
 	constructor(stage: Stage, payload: ActorPayload) {
 		const size = new THREE.Vector3(1, 1, 1);
 		const position = new THREE.Vector3(3, -1, 0);
-		super(stage, {
-			size,
-			position,
-			hasMesh: false,
-			tag: 'player-test'
-		});
+		super(stage, 'player-test');
+		this.createBody();
+		this.collisionSpherical(1.0);
 		this.currentAction = payload.action;
 		this.mixer = payload.mixer;
 		this.object = payload.object;

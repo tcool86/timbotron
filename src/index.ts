@@ -4,7 +4,7 @@ import Entity from './lib/Entities/Entity';
 import Stage from './lib/Stage';
 import Globals from './lib/Globals';
 
-export type { LoopInjections } from './lib/Game';
+export type { LoopInterface } from './lib/Game';
 
 export default function Pyramid() {
 	return {
