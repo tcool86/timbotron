@@ -15,7 +15,6 @@ export default class Stage {
 	composer: EffectComposer;
 	children: Map<string, Entity>;
 	players?: Map<string, Actor>;
-	ground: Entity;
 
 	constructor(world: RAPIER.World) {
 		const scene = new THREE.Scene();
@@ -54,13 +53,6 @@ export default class Stage {
 		this.scene = scene;
 		this.world = world;
 		this.children = new Map();
-		this.ground = new Entity(this, 'ground');
-		const groundSize = new THREE.Vector3(100, 1, 100);
-		this.ground.applyTexture();
-		this.ground.rectangularMesh(groundSize, new THREE.Vector3(0, 0, 0));
-		this.ground.createBody();
-		this.ground.collisionRectangular(groundSize);
-		this.ground.collisionStatic();
 	}
 
 	update(delta: number) {

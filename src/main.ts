@@ -1,7 +1,11 @@
 import './style.css'
 import Pyramid, { LoopInterface } from './index';
+import * as THREE from 'three';
 import RAPIER from '@dimforge/rapier3d-compat';
 import { SetupInterface } from './lib/Game';
+import grassTest from './assets/grass.jpg?url';
+import metalTest from './assets/metal-box.jpg?url';
+import woodTest from './assets/wood-box.jpg?url';
 
 const app = document.querySelector<HTMLDivElement>('#app')!;
 
@@ -18,23 +22,30 @@ const game = new Game({
 		const { metal } = materials;
 
 		const box = createBox({
-			color: 0x880000,
-			texture: 'name',
-			material: metal,
+			texturePath: woodTest,
 			position: new RAPIER.Vector3(-3, 0.5, 3),
 			width: 2,
-			height: 3,
+			height: 2,
 			depth: 2
 		});
 		const sphere = createSphere({
-			color: 0x880000,
-			texture: 'name',
+			color: 0xFF9999,
 			material: metal,
+			texturePath: metalTest,
 			position: new RAPIER.Vector3(-3, 0.5, 10),
-			radius: 2.0
+			radius: 1.0
+		});
+		const ground = createBox({
+			fixed: true,
+			texturePath: grassTest,
+			textureSize: new THREE.Vector2(8, 8),
+			width: 100,
+			height: 0.5,
+			depth: 100
 		});
 		console.log(box);
 		console.log(sphere);
+		console.log(ground);
 	},
 	loop: ({ inputs, player }: LoopInterface) => {
 		const { horizontal, vertical, buttonA, buttonB } = inputs[0];

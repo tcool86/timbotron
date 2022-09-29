@@ -1,8 +1,8 @@
 import Stage from "../Stage";
-import grassTest from '../../assets/grass.jpg?url';
 import { Vector3 } from '../Game';
 import RAPIER from '@dimforge/rapier3d-compat';
 import * as THREE from 'three';
+import { Vector2 } from "three";
 
 export interface EntityBuilder {
 	rectangularMesh(size: Vector3, position: Vector3): void;
@@ -14,8 +14,7 @@ export interface EntityBuilder {
 	collisionStatic(): void;
 	setRotation(): void;
 	enableDebug(): void;
-	applyTexture(): void;
-	applyMaterial(): void;
+	applyMaterial(texturePath: string | null, color: number, repeat: Vector2): void;
 }
 
 export default class Entity implements EntityBuilder {
@@ -42,6 +41,7 @@ export default class Entity implements EntityBuilder {
 		console.log(this.material);
 		this.mesh = new THREE.Mesh(geometry, this.material);
 		this.mesh.position.set(position.x, position.y, position.z);
+		this.mesh.castShadow = true;
 		scene.add(this.mesh);
 	}
 
@@ -50,6 +50,7 @@ export default class Entity implements EntityBuilder {
 		const geometry = new THREE.SphereGeometry(radius);
 		this.mesh = new THREE.Mesh(geometry, this.material);
 		this.mesh.position.set(position.x, position.y, position.z);
+		this.mesh.castShadow = true;
 		scene.add(this.mesh);
 	}
 
@@ -92,26 +93,30 @@ export default class Entity implements EntityBuilder {
 	enableDebug() {
 
 	}
-	applyTexture() {
-		const texture = grassTest;
-		console.log(grassTest);
-		const loader = new THREE.TextureLoader();
-		loader.setPath('');
 
-		const textureCube = loader.load(texture);
-		textureCube.repeat = new THREE.Vector2(4.0, 4.0);
-		textureCube.wrapS = THREE.RepeatWrapping;
-		textureCube.wrapT = THREE.RepeatWrapping;
-		const material = new THREE.MeshPhongMaterial({
-			color: 0xffffff,
-			map: textureCube,
-			// bumpMap: textureNormal,
-			// bumpScale: 2
-		});
+	applyMaterial(texturePath: string | null, color: number, repeat: Vector2) {
+		let material;
+		if (texturePath) {
+			const loader = new THREE.TextureLoader();
+			loader.setPath('');
+
+			const texture = loader.load(texturePath);
+			texture.repeat = repeat;
+			texture.wrapS = THREE.RepeatWrapping;
+			texture.wrapT = THREE.RepeatWrapping;
+			material = new THREE.MeshPhongMaterial({
+				color: color,
+				map: texture,
+				// bumpMap: texture,
+				// bumpScale: 0.3
+			});
+		} else {
+			material = new THREE.MeshBasicMaterial({
+				color: color,
+
+			});
+		}
 		this.material = material;
-	}
-	applyMaterial() {
-
 	}
 
 	update(_delta: number) {

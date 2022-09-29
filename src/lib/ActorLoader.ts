@@ -1,6 +1,7 @@
 import * as THREE from 'three';
 import { FBXLoader } from 'three/examples/jsm/loaders/FBXLoader';
-import test from '../models/salsa.fbx?url';
+// import run from '../models/run.fbx?url';
+import idle from '../models/hook.fbx?url';
 
 export default function pixelTexture(texture: THREE.Texture) {
 	texture.minFilter = THREE.NearestFilter;
@@ -31,17 +32,16 @@ export class ActorLoader {
 	 * @param directory 
 	 */
 	load(directory: string): Promise<ActorPayload> {
-		console.log(`${directory} currently unused`)
+		console.log(`${directory} currently unused`);
 		return new Promise((resolve, reject) => {
 			return this.fbxLoader.load(
-				test, // replace with directory dynamic import
+				idle, // replace with directory dynamic import
 				(object) => {
 					const mixer = new THREE.AnimationMixer(object);
 					const action: THREE.AnimationAction = mixer.clipAction(
 						(object as THREE.Object3D).animations[0]
 					);
 					action.play();
-					object.userData = { hasAnimation: true, mixer: mixer };
 					const payload: ActorPayload = {
 						object,
 						action,
