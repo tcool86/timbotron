@@ -4,6 +4,7 @@ import Stage from './Stage';
 import { Menu } from './Menu';
 import Entity from './Entities/Entity';
 import { Primitives, PrimitiveOptions } from './Entities/Primitives';
+import { Triggers, TriggerOptions } from './Entities/Triggers';
 import { materials } from './Entities/Materials';
 import Gamepad, { ControllerInput } from './Gamepad';
 
@@ -24,6 +25,9 @@ export interface SetupInterface {
 		createBox(options: PrimitiveOptions): Entity;
 		createSphere(options: PrimitiveOptions): Entity;
 	};
+	triggers: {
+		createAreaTrigger(options: TriggerOptions): Entity;
+	}
 	materials: {
 		metal: THREE.Material;
 	};
@@ -100,9 +104,11 @@ class Game {
 
 	async gameSetup() {
 		const primitives = Primitives(this.stage());
+		const triggers = Triggers(this.stage());
 		this.setup({
 			primitives,
-			materials
+			materials,
+			triggers
 		});
 	}
 

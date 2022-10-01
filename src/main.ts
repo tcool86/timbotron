@@ -22,9 +22,12 @@ const globals = new Globals({
 	player: { x: 0, z: 0 }
 })
 
+let boxTrigger: Entity;
+
 const game = new Game({
-	setup: ({ primitives, materials }: SetupInterface) => {
+	setup: ({ primitives, materials, triggers }: SetupInterface) => {
 		const { createBox, createSphere } = primitives;
+		const { createAreaTrigger } = triggers;
 		const { metal } = materials;
 
 		const box = createBox({
@@ -46,12 +49,34 @@ const game = new Game({
 			texturePath: grassTest,
 			textureSize: new THREE.Vector2(8, 8),
 			width: 100,
-			height: 0.5,
+			height: 0.2,
 			depth: 100
+		});
+		boxTrigger = createAreaTrigger({
+			debugColor: 0x994409,
+			position: new RAPIER.Vector3(0, 3.5, -20),
+			width: 30,
+			height: 10,
+			depth: 15,
+			action: () => {
+				if (!boxTrigger.enteredTrigger) {
+					console.log("entered trigger area");
+					boxTrigger.debugColor = 0xBADA55;
+					boxTrigger.enteredTrigger = true;
+				}
+			},
+			exitAction: () => {
+				if (boxTrigger.enteredTrigger) {
+					console.log("left trigger area");
+					boxTrigger.debugColor = 0x994409;
+					boxTrigger.enteredTrigger = false;
+				}
+			}
 		});
 		console.log(box);
 		console.log(sphere);
 		console.log(ground);
+		console.log(boxTrigger);
 	},
 	loop: ({ inputs, player, stage }: LoopInterface) => {
 		const { world } = stage;
@@ -71,9 +96,9 @@ const game = new Game({
 			}
 		);
 		if (buttonA) {
-			console.log(globals.current());
-			console.log(world);
-			console.log(player.body.collider);
+			// console.log(globals.current());
+			// console.log(world);
+			// console.log(player.body.collider);
 		}
 		world.contactsWith(player.body.collider(0), (otherCollider) => {
 			const object = otherCollider.parent();
@@ -91,7 +116,17 @@ const game = new Game({
 				const material = entity.debug?.material as THREE.MeshPhongMaterial;
 				material.color?.set(0x009900);
 			}
-		})
+		});
+		const isColliding = world.intersectionPair(boxTrigger.body.collider(0), player.body.collider(0));
+		if (isColliding) {
+			if (boxTrigger.action) {
+				boxTrigger.action();
+			}
+		} else {
+			if (boxTrigger.exitAction) {
+				boxTrigger.exitAction();
+			}
+		}
 	}
 });
 game.ready.then(() => {

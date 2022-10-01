@@ -36,7 +36,7 @@ export function createBox(options: PrimitiveOptions, stage: Stage) {
 	const textureSize = options?.textureSize || new THREE.Vector2(1, 1);
 	entity.applyMaterial(texturePath, color, textureSize);
 	entity.rectangularMesh(size, position);
-	entity.createBody();
+	entity.createBody(position);
 	entity.collisionRectangular(size);
 	entity.body.setAdditionalMass(0.02, true);
 	entity.body.setAngularDamping(0.1);
@@ -57,7 +57,7 @@ export function createSphere(options: PrimitiveOptions, stage: Stage) {
 	const textureSize = options?.textureSize || new THREE.Vector2(1, 1);
 	entity.applyMaterial(texturePath, color, textureSize);
 	entity.sphericalMesh(radius, position);
-	entity.createBody();
+	entity.createBody(position);
 	entity.collisionSpherical(radius);
 	entity.body.setAdditionalMass(0.02, true);
 	entity.body.setAngularDamping(0.1);

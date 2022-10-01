@@ -2,13 +2,13 @@ import Stage from "../Stage";
 import { Vector3 } from '../Game';
 import RAPIER from '@dimforge/rapier3d-compat';
 import * as THREE from 'three';
-import { Vector2 } from "three";
+import { BufferGeometry, Vector2 } from "three";
 
 export interface EntityBuilder {
 	rectangularMesh(size: Vector3, position: Vector3): void;
 	sphericalMesh(radius: number, position: Vector3): void;
 	noMesh(): void;
-	createBody(): void;
+	createBody(position: Vector3): void;
 	collisionRectangular(size: Vector3): void;
 	collisionSpherical(radius: number): void;
 	collisionStatic(): void;
@@ -23,6 +23,9 @@ export default class Entity implements EntityBuilder {
 	mesh?: THREE.Mesh;
 	body!: RAPIER.RigidBody;
 	debug: THREE.Mesh | null;
+	debugColor: THREE.ColorRepresentation;
+	action?: Function;
+	exitAction?: Function;
 	showDebug: boolean;
 	stageRef: Stage;
 	tag: string;
@@ -33,6 +36,7 @@ export default class Entity implements EntityBuilder {
 		this.stageRef = stage;
 		this.tag = tag;
 		this.debug = null;
+		this.debugColor = 0xFFFFFF;
 		this.showDebug = false;
 		this.id = `e-${Entity.instanceCounter++}`;
 	}
@@ -44,13 +48,7 @@ export default class Entity implements EntityBuilder {
 		this.mesh.position.set(position.x, position.y, position.z);
 		this.mesh.castShadow = true;
 		scene.add(this.mesh);
-
-		const debugMaterial = new THREE.MeshPhongMaterial();
-		debugMaterial.wireframe = true;
-		debugMaterial.needsUpdate = true;
-		this.debug = new THREE.Mesh(geometry, debugMaterial);
-		this.debug.position.set(position.x, position.y, position.z);
-		scene.add(this.debug);
+		this.createDebugMesh(geometry, position);
 	}
 
 	sphericalMesh(radius: number, position: Vector3) {
@@ -60,38 +58,50 @@ export default class Entity implements EntityBuilder {
 		this.mesh.position.set(position.x, position.y, position.z);
 		this.mesh.castShadow = true;
 		scene.add(this.mesh);
+		this.createDebugMesh(geometry, position);
+	}
 
-		const debugMaterial = new THREE.MeshPhongMaterial();
+	noMesh() { }
+
+	createDebugMesh(geometry: BufferGeometry, position: Vector3, color: number = 0xFFFFFF) {
+		const { scene } = this.stageRef;
+		const debugMaterial = new THREE.MeshPhongMaterial({
+			color: new THREE.Color(color),
+		});
 		debugMaterial.wireframe = true;
 		debugMaterial.needsUpdate = true;
+		this.debugColor = color;
 		this.debug = new THREE.Mesh(geometry, debugMaterial);
 		this.debug.position.set(position.x, position.y, position.z);
 		scene.add(this.debug);
 	}
 
-	noMesh() { }
-
-	createBody(): void {
+	createBody(position: Vector3): void {
 		const { world } = this.stageRef;
-		const { x, y, z } = this.mesh?.position ?? { x: 0, y: 0, z: 0 };
+		const { x, y, z } = position ?? { x: 0, y: 0, z: 0 };
 		const rigidBodyDesc = RAPIER.RigidBodyDesc.dynamic().setTranslation(x, y, z);
 		rigidBodyDesc.setLinearDamping(1.0).setAngularDamping(1.0);
 		rigidBodyDesc.userData = { id: this.id };
 		this.body = world.createRigidBody(rigidBodyDesc);
 	}
 
-	collisionRectangular(size: Vector3) {
+	collisionRectangular(size: Vector3, isSensor: boolean = false) {
 		const { world } = this.stageRef;
 		const half = { x: size.x / 2, y: size.y / 2, z: size.z / 2 };
 		let colliderDesc = RAPIER.ColliderDesc.cuboid(half.x, half.y, half.z);
-
+		colliderDesc.setSensor(isSensor);
+		if (isSensor) {
+			// "KINEMATIC_FIXED" will only sense actors moving through the sensor
+			colliderDesc.activeCollisionTypes = RAPIER.ActiveCollisionTypes.KINEMATIC_FIXED;
+			// colliderDesc.setActiveHooks(RAPIER.ActiveHooks.FILTER_INTERSECTION_PAIRS);
+		}
 		world.createCollider(colliderDesc, this.body);
 	}
 
 	collisionSpherical(radius: number) {
 		const { world } = this.stageRef;
 		let colliderDesc = RAPIER.ColliderDesc.ball(radius);
-
+		// colliderDesc.setSensor(true);
 		world.createCollider(colliderDesc, this.body);
 	}
 
@@ -133,13 +143,15 @@ export default class Entity implements EntityBuilder {
 	update(_delta: number) {
 		const translationVector: RAPIER.Vector = this.body.translation();
 		const rotationVector: RAPIER.Rotation = this.body.rotation();
-		this.mesh?.position.set(translationVector.x, translationVector.y, translationVector.z);
-		this.mesh?.rotation.set(rotationVector.x, rotationVector.y, rotationVector.z);
-		if (this.showDebug) {
-			this.debug?.position.set(translationVector.x, translationVector.y, translationVector.z);
-			this.debug?.rotation.set(rotationVector.x, rotationVector.y, rotationVector.z);
-			const material = this.debug?.material as THREE.MeshPhongMaterial;
-			material.color?.set(0xffffff);
+		if (this.mesh) {
+			this.mesh.position.set(translationVector.x, translationVector.y, translationVector.z);
+			this.mesh.rotation.set(rotationVector.x, rotationVector.y, rotationVector.z);
+		}
+		if (this.showDebug && this.debug) {
+			this.debug.position.set(translationVector.x, translationVector.y, translationVector.z);
+			this.debug.rotation.set(rotationVector.x, rotationVector.y, rotationVector.z);
+			const material = this.debug.material as THREE.MeshPhongMaterial;
+			material.color?.set(this.debugColor);
 		}
 	}
 
