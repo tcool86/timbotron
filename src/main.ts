@@ -12,6 +12,11 @@ const app = document.querySelector<HTMLDivElement>('#app')!;
 
 const { Game, Globals } = Pyramid();
 
+// TODO: temp fix for deployment
+interface EntityColliderData {
+	id: string;
+}
+
 const globals = new Globals({
 	score: 0,
 	player: { x: 0, z: 0 }
@@ -72,7 +77,7 @@ const game = new Game({
 		}
 		world.contactsWith(player.body.collider(0), (otherCollider) => {
 			const object = otherCollider.parent();
-			const userData = object?.userData;
+			const userData: EntityColliderData = object?.userData as EntityColliderData;
 			if (!userData) {
 				console.log('no user data on collider');
 				return;
