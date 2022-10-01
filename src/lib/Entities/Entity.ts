@@ -13,7 +13,6 @@ export interface EntityBuilder {
 	collisionSpherical(radius: number): void;
 	collisionStatic(): void;
 	setRotation(): void;
-	enableDebug(): void;
 	applyMaterial(texturePath: string | null, color: number, repeat: Vector2): void;
 }
 
@@ -23,7 +22,8 @@ export default class Entity implements EntityBuilder {
 	geometry?: THREE.BoxGeometry | THREE.SphereGeometry;
 	mesh?: THREE.Mesh;
 	body!: RAPIER.RigidBody;
-	debug!: THREE.Mesh;
+	debug: THREE.Mesh | null;
+	showDebug: boolean;
 	stageRef: Stage;
 	tag: string;
 
@@ -32,17 +32,25 @@ export default class Entity implements EntityBuilder {
 	constructor(stage: Stage, tag: string) {
 		this.stageRef = stage;
 		this.tag = tag;
+		this.debug = null;
+		this.showDebug = false;
 		this.id = `e-${Entity.instanceCounter++}`;
 	}
 
 	rectangularMesh(size: Vector3, position: Vector3) {
 		const { scene } = this.stageRef;
 		const geometry = new THREE.BoxGeometry(size.x, size.y, size.z);
-		console.log(this.material);
 		this.mesh = new THREE.Mesh(geometry, this.material);
 		this.mesh.position.set(position.x, position.y, position.z);
 		this.mesh.castShadow = true;
 		scene.add(this.mesh);
+
+		const debugMaterial = new THREE.MeshPhongMaterial();
+		debugMaterial.wireframe = true;
+		debugMaterial.needsUpdate = true;
+		this.debug = new THREE.Mesh(geometry, debugMaterial);
+		this.debug.position.set(position.x, position.y, position.z);
+		scene.add(this.debug);
 	}
 
 	sphericalMesh(radius: number, position: Vector3) {
@@ -52,6 +60,13 @@ export default class Entity implements EntityBuilder {
 		this.mesh.position.set(position.x, position.y, position.z);
 		this.mesh.castShadow = true;
 		scene.add(this.mesh);
+
+		const debugMaterial = new THREE.MeshPhongMaterial();
+		debugMaterial.wireframe = true;
+		debugMaterial.needsUpdate = true;
+		this.debug = new THREE.Mesh(geometry, debugMaterial);
+		this.debug.position.set(position.x, position.y, position.z);
+		scene.add(this.debug);
 	}
 
 	noMesh() { }
@@ -61,6 +76,7 @@ export default class Entity implements EntityBuilder {
 		const { x, y, z } = this.mesh?.position ?? { x: 0, y: 0, z: 0 };
 		const rigidBodyDesc = RAPIER.RigidBodyDesc.dynamic().setTranslation(x, y, z);
 		rigidBodyDesc.setLinearDamping(1.0).setAngularDamping(1.0);
+		rigidBodyDesc.userData = { id: this.id };
 		this.body = world.createRigidBody(rigidBodyDesc);
 	}
 
@@ -90,10 +106,6 @@ export default class Entity implements EntityBuilder {
 		this.body.setRotation({ x, y, z, w: 0 }, true);
 	}
 
-	enableDebug() {
-
-	}
-
 	applyMaterial(texturePath: string | null, color: number, repeat: Vector2) {
 		let material;
 		if (texturePath) {
@@ -113,7 +125,6 @@ export default class Entity implements EntityBuilder {
 		} else {
 			material = new THREE.MeshBasicMaterial({
 				color: color,
-
 			});
 		}
 		this.material = material;
@@ -124,6 +135,12 @@ export default class Entity implements EntityBuilder {
 		const rotationVector: RAPIER.Rotation = this.body.rotation();
 		this.mesh?.position.set(translationVector.x, translationVector.y, translationVector.z);
 		this.mesh?.rotation.set(rotationVector.x, rotationVector.y, rotationVector.z);
+		if (this.showDebug) {
+			this.debug?.position.set(translationVector.x, translationVector.y, translationVector.z);
+			this.debug?.rotation.set(rotationVector.x, rotationVector.y, rotationVector.z);
+			const material = this.debug?.material as THREE.MeshPhongMaterial;
+			material.color?.set(0xffffff);
+		}
 	}
 
 

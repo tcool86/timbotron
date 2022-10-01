@@ -6,6 +6,7 @@ import { SetupInterface } from './lib/Game';
 import grassTest from './assets/grass.jpg?url';
 import metalTest from './assets/metal-box.jpg?url';
 import woodTest from './assets/wood-box.jpg?url';
+import Entity from './lib/Entities/Entity';
 
 const app = document.querySelector<HTMLDivElement>('#app')!;
 
@@ -47,7 +48,8 @@ const game = new Game({
 		console.log(sphere);
 		console.log(ground);
 	},
-	loop: ({ inputs, player }: LoopInterface) => {
+	loop: ({ inputs, player, stage }: LoopInterface) => {
+		const { world } = stage;
 		const { horizontal, vertical, buttonA, buttonB } = inputs[0];
 		let moveVector = new RAPIER.Vector3(
 			horizontal * 10,
@@ -65,7 +67,26 @@ const game = new Game({
 		);
 		if (buttonA) {
 			console.log(globals.current());
+			console.log(world);
+			console.log(player.body.collider);
 		}
+		world.contactsWith(player.body.collider(0), (otherCollider) => {
+			const object = otherCollider.parent();
+			const userData = object?.userData;
+			if (!userData) {
+				console.log('no user data on collider');
+				return;
+			}
+			const { id } = userData ?? { id: null };
+			if (id === null) {
+				console.log('no id on collider');
+				return;
+			} else {
+				const entity = stage.children.get(id) as Entity;
+				const material = entity.debug?.material as THREE.MeshPhongMaterial;
+				material.color?.set(0x009900);
+			}
+		})
 	}
 });
 game.ready.then(() => {

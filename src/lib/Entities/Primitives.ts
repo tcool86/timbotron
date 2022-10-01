@@ -43,6 +43,7 @@ export function createBox(options: PrimitiveOptions, stage: Stage) {
 	if (options?.fixed) {
 		entity.collisionStatic();
 	}
+	entity.showDebug = true;
 	stage.children.set(entity.id, entity);
 	return entity;
 }
@@ -60,6 +61,7 @@ export function createSphere(options: PrimitiveOptions, stage: Stage) {
 	entity.collisionSpherical(radius);
 	entity.body.setAdditionalMass(0.02, true);
 	entity.body.setAngularDamping(0.1);
+	entity.showDebug = true;
 	stage.children.set(entity.id, entity);
 	return entity;
 }

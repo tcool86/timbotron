@@ -16,6 +16,7 @@ export interface LoopInterface {
 	ticks: number;
 	inputs: ControllerInput[];
 	player: Actor;
+	stage: Stage;
 }
 
 export interface SetupInterface {
@@ -87,7 +88,8 @@ class Game {
 		this.loop({
 			ticks,
 			inputs,
-			player
+			player,
+			stage: this.stage()
 		});
 
 		this.stage().render();
