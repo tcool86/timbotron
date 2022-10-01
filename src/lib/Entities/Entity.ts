@@ -26,6 +26,7 @@ export default class Entity implements EntityBuilder {
 	debugColor: THREE.ColorRepresentation;
 	action?: Function;
 	exitAction?: Function;
+	enteredTrigger?: boolean;
 	showDebug: boolean;
 	stageRef: Stage;
 	tag: string;
