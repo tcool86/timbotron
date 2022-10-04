@@ -1,6 +1,6 @@
 import * as THREE from 'three';
 import Stage from '../Stage';
-import { Vector3 } from '../Game';
+import { Vector3, Vector2 } from '../Util';
 import Entity from './Entity';
 
 /**
@@ -28,12 +28,12 @@ export interface PrimitiveOptions {
 
 export function createBox(options: PrimitiveOptions, stage: Stage) {
 	const { width, height, depth } = options;
-	const position = options?.position || new THREE.Vector3(0, 0, 0);
+	const position = options?.position || new Vector3(0, 0, 0);
 	const entity = new Entity(stage, 'test');
-	const size = new THREE.Vector3(width, height, depth);
+	const size = new Vector3(width, height, depth);
 	const color = options?.color || 0xFFFFFF;
 	const texturePath = options?.texturePath || null;
-	const textureSize = options?.textureSize || new THREE.Vector2(1, 1);
+	const textureSize = options?.textureSize || new Vector2(1, 1);
 	entity.applyMaterial(texturePath, color, textureSize);
 	entity.rectangularMesh(size, position);
 	entity.createBody(position);
@@ -50,11 +50,11 @@ export function createBox(options: PrimitiveOptions, stage: Stage) {
 
 export function createSphere(options: PrimitiveOptions, stage: Stage) {
 	const radius = options.radius ?? 1;
-	const position = options?.position || new THREE.Vector3(0, 0, 0);
+	const position = options?.position || new Vector3(0, 0, 0);
 	const entity = new Entity(stage, 'test');
 	const color = options?.color || 0xFFFFFF;
 	const texturePath = options?.texturePath || null;
-	const textureSize = options?.textureSize || new THREE.Vector2(1, 1);
+	const textureSize = options?.textureSize || new Vector2(1, 1);
 	entity.applyMaterial(texturePath, color, textureSize);
 	entity.sphericalMesh(radius, position);
 	entity.createBody(position);

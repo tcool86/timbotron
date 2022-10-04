@@ -1,7 +1,5 @@
 import './style.css'
 import Pyramid, { LoopInterface } from './index';
-import * as THREE from 'three';
-import RAPIER from '@dimforge/rapier3d-compat';
 import { SetupInterface } from './lib/Game';
 import grassTest from './assets/grass.jpg?url';
 import metalTest from './assets/metal-box.jpg?url';
@@ -10,7 +8,7 @@ import { TriggerEntity } from './lib/Entities/Entity';
 
 const app = document.querySelector<HTMLDivElement>('#app')!;
 
-const { Game, Globals } = Pyramid();
+const { Game, Globals, Vector3, Vector2 } = Pyramid();
 
 const globals = new Globals({
 	score: 0,
@@ -25,7 +23,7 @@ const game = new Game({
 
 		const box = createBox({
 			texturePath: woodTest,
-			position: new RAPIER.Vector3(-3, 0.5, 3),
+			position: new Vector3(-3, 0.5, 3),
 			width: 2,
 			height: 2,
 			depth: 2
@@ -34,20 +32,20 @@ const game = new Game({
 			color: 0xFF9999,
 			material: metal,
 			texturePath: metalTest,
-			position: new RAPIER.Vector3(-3, 0.5, 10),
+			position: new Vector3(-3, 0.5, 10),
 			radius: 1.0
 		});
 		const ground = createBox({
 			fixed: true,
 			texturePath: grassTest,
-			textureSize: new THREE.Vector2(8, 8),
+			textureSize: new Vector2(8, 8),
 			width: 100,
 			height: 0.2,
 			depth: 100
 		});
 		let boxTrigger: TriggerEntity = createAreaTrigger({
 			debugColor: 0x994409,
-			position: new RAPIER.Vector3(0, 3.5, -20),
+			position: new Vector3(0, 3.5, -20),
 			width: 30,
 			height: 10,
 			depth: 15,
@@ -73,7 +71,7 @@ const game = new Game({
 	},
 	loop: ({ inputs, player }: LoopInterface) => {
 		const { horizontal, vertical, buttonA, buttonB } = inputs[0];
-		let moveVector = new RAPIER.Vector3(
+		let moveVector = new Vector3(
 			horizontal * 10,
 			(buttonA) || -(buttonB),
 			vertical * 10,

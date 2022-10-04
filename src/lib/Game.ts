@@ -11,8 +11,6 @@ import Gamepad, { ControllerInput } from './Gamepad';
 import { Clock } from 'three';
 import Actor from './Actor';
 
-export type Vector3 = RAPIER.Vector3 | THREE.Vector3; // TODO: merge vector types
-
 export interface LoopInterface {
 	ticks: number;
 	inputs: ControllerInput[];

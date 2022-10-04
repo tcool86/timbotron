@@ -1,6 +1,6 @@
 import * as THREE from 'three';
 import Stage from '../Stage';
-import { Vector3 } from '../Game';
+import { Vector3 } from '../Util';
 import Entity, { TriggerEntity } from './Entity';
 
 /**
@@ -24,9 +24,9 @@ export interface TriggerOptions {
 
 export function createAreaTrigger(options: TriggerOptions, stage: Stage) {
 	const { width, height, depth } = options;
-	const position = options?.position || new THREE.Vector3(0, 0, 0);
+	const position = options?.position || new Vector3(0, 0, 0);
 	const entity: TriggerEntity = new Entity(stage, 'test');
-	const size = new THREE.Vector3(width, height, depth);
+	const size = new Vector3(width, height, depth);
 	const color = options?.debugColor || 0xFFFFFF;
 	const geometry = new THREE.BoxGeometry(width, height, depth);
 	entity.createDebugMesh(geometry, position, color);

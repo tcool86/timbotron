@@ -1,5 +1,5 @@
 import Stage from "../Stage";
-import { Vector3 } from '../Game';
+import { Vector3 } from '../Util';
 import RAPIER from '@dimforge/rapier3d-compat';
 import * as THREE from 'three';
 import { BufferGeometry, Vector2 } from "three";
