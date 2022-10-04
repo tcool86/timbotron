@@ -6,23 +6,16 @@ import { SetupInterface } from './lib/Game';
 import grassTest from './assets/grass.jpg?url';
 import metalTest from './assets/metal-box.jpg?url';
 import woodTest from './assets/wood-box.jpg?url';
-import Entity from './lib/Entities/Entity';
+import { TriggerEntity } from './lib/Entities/Entity';
 
 const app = document.querySelector<HTMLDivElement>('#app')!;
 
 const { Game, Globals } = Pyramid();
 
-// TODO: temp fix for deployment
-interface EntityColliderData {
-	id: string;
-}
-
 const globals = new Globals({
 	score: 0,
 	player: { x: 0, z: 0 }
 })
-
-let boxTrigger: Entity;
 
 const game = new Game({
 	setup: ({ primitives, materials, triggers }: SetupInterface) => {
@@ -52,7 +45,7 @@ const game = new Game({
 			height: 0.2,
 			depth: 100
 		});
-		boxTrigger = createAreaTrigger({
+		let boxTrigger: TriggerEntity = createAreaTrigger({
 			debugColor: 0x994409,
 			position: new RAPIER.Vector3(0, 3.5, -20),
 			width: 30,
@@ -78,8 +71,7 @@ const game = new Game({
 		console.log(ground);
 		console.log(boxTrigger);
 	},
-	loop: ({ inputs, player, stage }: LoopInterface) => {
-		const { world } = stage;
+	loop: ({ inputs, player }: LoopInterface) => {
 		const { horizontal, vertical, buttonA, buttonB } = inputs[0];
 		let moveVector = new RAPIER.Vector3(
 			horizontal * 10,
@@ -99,33 +91,6 @@ const game = new Game({
 			// console.log(globals.current());
 			// console.log(world);
 			// console.log(player.body.collider);
-		}
-		world.contactsWith(player.body.collider(0), (otherCollider) => {
-			const object = otherCollider.parent();
-			const userData: EntityColliderData = object?.userData as EntityColliderData;
-			if (!userData) {
-				console.log('no user data on collider');
-				return;
-			}
-			const { id } = userData ?? { id: null };
-			if (id === null) {
-				console.log('no id on collider');
-				return;
-			} else {
-				const entity = stage.children.get(id) as Entity;
-				const material = entity.debug?.material as THREE.MeshPhongMaterial;
-				material.color?.set(0x009900);
-			}
-		});
-		const isColliding = world.intersectionPair(boxTrigger.body.collider(0), player.body.collider(0));
-		if (isColliding) {
-			if (boxTrigger.action) {
-				boxTrigger.action();
-			}
-		} else {
-			if (boxTrigger.exitAction) {
-				boxTrigger.exitAction();
-			}
 		}
 	}
 });

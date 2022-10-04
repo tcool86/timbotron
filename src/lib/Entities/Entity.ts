@@ -16,6 +16,12 @@ export interface EntityBuilder {
 	applyMaterial(texturePath: string | null, color: number, repeat: Vector2): void;
 }
 
+export interface TriggerEntity extends Entity {
+	action?: Function;
+	exitAction?: Function;
+	enteredTrigger?: boolean;
+}
+
 export default class Entity implements EntityBuilder {
 	id: string;
 	material?: THREE.Material;
@@ -24,9 +30,6 @@ export default class Entity implements EntityBuilder {
 	body!: RAPIER.RigidBody;
 	debug: THREE.Mesh | null;
 	debugColor: THREE.ColorRepresentation;
-	action?: Function;
-	exitAction?: Function;
-	enteredTrigger?: boolean;
 	showDebug: boolean;
 	stageRef: Stage;
 	tag: string;

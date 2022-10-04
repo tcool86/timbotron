@@ -5,16 +5,21 @@ import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
 // import RenderPass from './rendering/RenderPixelatedPass';
 import RenderPass from './rendering/RenderPass';
 import { ActorLoader } from './ActorLoader';
-import Entity from './Entities/Entity';
+import Entity, { TriggerEntity } from './Entities/Entity';
 import Actor from './Actor';
+
+interface EntityColliderData {
+	id: string;
+}
 
 export default class Stage {
 	world: RAPIER.World;
 	scene: THREE.Scene;
 	renderer: THREE.WebGLRenderer;
 	composer: EffectComposer;
+	triggers: Map<string, TriggerEntity>;
 	children: Map<string, Entity>;
-	players?: Map<string, Actor>;
+	players: Map<string, Actor>;
 
 	constructor(world: RAPIER.World) {
 		const scene = new THREE.Scene();
@@ -53,6 +58,8 @@ export default class Stage {
 		this.scene = scene;
 		this.world = world;
 		this.children = new Map();
+		this.triggers = new Map();
+		this.players = new Map();
 	}
 
 	update(delta: number) {
@@ -62,6 +69,50 @@ export default class Stage {
 		while (entityWrapper = entityIterator.next().value) {
 			const [, entity] = entityWrapper;
 			entity.update(delta);
+		}
+		this.updateColliders();
+	}
+
+	updateColliders() {
+		if (!this.players) return;
+		for (let [, player] of this.players) {
+			this.world.contactsWith(player.body.collider(0), (otherCollider) => {
+				const object = otherCollider.parent();
+				const userData: EntityColliderData = object?.userData as EntityColliderData;
+				if (!userData) {
+					console.log('no user data on collider');
+					return;
+				}
+				const { id } = userData ?? { id: null };
+				if (id === null) {
+					console.log('no id on collider');
+					return;
+				} else {
+					const entity = this.children.get(id) as Entity;
+					const material = entity.debug?.material as THREE.MeshPhongMaterial;
+					material.color?.set(0x009900);
+				}
+			});
+			this.updateIntersections(player);
+		}
+	}
+
+	updateIntersections(player: Actor) {
+		if (!this.triggers) return;
+		for (let [, trigger] of this.triggers) {
+			const isColliding = this.world.intersectionPair(
+				trigger.body.collider(0),
+				player.body.collider(0)
+			);
+			if (isColliding) {
+				if (trigger.action) {
+					trigger.action();
+				}
+			} else {
+				if (trigger.exitAction) {
+					trigger.exitAction();
+				}
+			}
 		}
 	}
 
@@ -80,6 +131,7 @@ export default class Stage {
 		const actorPayload = await loader.load('');
 		const player = new Actor(this, actorPayload);
 		this.children.set(player.id, player);
+		this.players.set(player.id, player);
 	}
 
 }

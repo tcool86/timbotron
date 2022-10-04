@@ -1,7 +1,7 @@
 import * as THREE from 'three';
 import Stage from '../Stage';
 import { Vector3 } from '../Game';
-import Entity from './Entity';
+import Entity, { TriggerEntity } from './Entity';
 
 /**
  * Functions for creating primitive geometries easily
@@ -25,7 +25,7 @@ export interface TriggerOptions {
 export function createAreaTrigger(options: TriggerOptions, stage: Stage) {
 	const { width, height, depth } = options;
 	const position = options?.position || new THREE.Vector3(0, 0, 0);
-	const entity = new Entity(stage, 'test');
+	const entity: TriggerEntity = new Entity(stage, 'test');
 	const size = new THREE.Vector3(width, height, depth);
 	const color = options?.debugColor || 0xFFFFFF;
 	const geometry = new THREE.BoxGeometry(width, height, depth);
@@ -37,6 +37,7 @@ export function createAreaTrigger(options: TriggerOptions, stage: Stage) {
 	entity.action = options.action;
 	entity.exitAction = options.exitAction;
 	stage.children.set(entity.id, entity);
+	stage.triggers.set(entity.id, entity);
 	return entity;
 }
 
