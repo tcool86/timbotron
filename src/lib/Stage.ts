@@ -4,7 +4,6 @@ import { EffectComposer } from 'three/examples/jsm/postprocessing/EffectComposer
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
 // import RenderPass from './rendering/RenderPixelatedPass';
 import RenderPass from './rendering/RenderPass';
-import { ActorLoader } from './Entities/ActorLoader';
 import Entity from './Entities/Entity';
 import { TriggerEntity } from './Entities/Triggers';
 import Actor from './Entities/Actor';
@@ -123,16 +122,7 @@ export default class Stage {
 
 	getPlayer() {
 		// return player node
-		return this.children.get('test-id');
-	}
-
-	// TODO: Temporary
-	async setupEntities() {
-		const loader = new ActorLoader();
-		const actorPayload = await loader.load('');
-		const player = new Actor(this, actorPayload);
-		this.children.set(player.id, player);
-		this.players.set(player.id, player);
+		return this.players.get('test-id');
 	}
 
 }

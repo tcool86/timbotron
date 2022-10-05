@@ -5,11 +5,12 @@ import { Menu } from './Menu';
 import Entity from './Entities/Entity';
 import { Primitives, PrimitiveOptions } from './Entities/Primitives';
 import { Triggers, TriggerOptions, TriggerEntity } from './Entities/Triggers';
+import { ActorOptions, Loaders } from './Entities/Loaders';
+import Actor from './Entities/Actor';
 import { materials } from './Entities/Materials';
 import Gamepad, { ControllerInput } from './Gamepad';
 
 import { Clock } from 'three';
-import Actor from './Entities/Actor';
 
 export interface LoopInterface {
 	ticks: number;
@@ -25,6 +26,9 @@ export interface SetupInterface {
 	};
 	triggers: {
 		createAreaTrigger(options: TriggerOptions): TriggerEntity;
+	};
+	loaders: {
+		createActor(options: ActorOptions): Actor
 	}
 	materials: {
 		metal: THREE.Material;
@@ -55,7 +59,6 @@ class Game {
 			try {
 				const world = await this.loadPhysics();
 				this.stages.push(new Stage(world));
-				await this.stage().setupEntities();
 				await this.gameSetup();
 				const self = this;
 				requestAnimationFrame(() => {
@@ -86,7 +89,7 @@ class Game {
 		const ticks = this.clock.getDelta();
 		this.stage().update(ticks);
 
-		const player = this.stage().getPlayer();
+		const player = this.stage().getPlayer() ?? { move: () => { } };
 		this.loop({
 			ticks,
 			inputs,
@@ -103,10 +106,12 @@ class Game {
 	async gameSetup() {
 		const primitives = Primitives(this.stage());
 		const triggers = Triggers(this.stage());
+		const loaders = Loaders(this.stage());
 		this.setup({
 			primitives,
 			materials,
-			triggers
+			triggers,
+			loaders
 		});
 	}
 

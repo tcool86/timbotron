@@ -4,6 +4,7 @@ import { SetupInterface } from './lib/Game';
 import grassTest from './assets/grass.jpg?url';
 import metalTest from './assets/metal-box.jpg?url';
 import woodTest from './assets/wood-box.jpg?url';
+import idle from './models/hook.fbx?url';
 
 const app = document.querySelector<HTMLDivElement>('#app')!;
 
@@ -15,12 +16,14 @@ const globals = new Globals({
 })
 
 const game = new Game({
-	setup: ({ primitives, materials, triggers }: SetupInterface) => {
+	setup: async ({ primitives, materials, triggers, loaders }: SetupInterface) => {
 		const { createBox, createSphere } = primitives;
 		const { createAreaTrigger } = triggers;
+		const { createActor } = loaders;
 		const { metal } = materials;
 
-		const box = createBox({
+		// Box
+		createBox({
 			debugColor: 0xBADA55,
 			showDebug: true,
 			texturePath: woodTest,
@@ -29,14 +32,16 @@ const game = new Game({
 			height: 2,
 			depth: 2
 		});
-		const sphere = createSphere({
+		// Sphere
+		createSphere({
 			color: 0xFF9999,
 			material: metal,
 			texturePath: metalTest,
 			position: new Vector3(-3, 0.5, 10),
 			radius: 1.0
 		});
-		const ground = createBox({
+		// Ground
+		createBox({
 			showDebug: true,
 			fixed: true,
 			texturePath: grassTest,
@@ -67,31 +72,29 @@ const game = new Game({
 				}
 			}
 		});
-		console.log(box);
-		console.log(sphere);
-		console.log(ground);
-		console.log(boxTrigger);
+		await createActor({
+			files: [idle]
+		})
 	},
 	loop: ({ inputs, player }: LoopInterface) => {
 		const { horizontal, vertical, buttonA, buttonB } = inputs[0];
-		let moveVector = new Vector3(
-			horizontal * 10,
-			(buttonA * 10) || -(buttonB * 10),
-			vertical * 10,
-		);
-		player.move(moveVector);
-		globals.update(
-			{
-				player: {
-					x: player.object.position.x,
-					z: player.object.position.z,
-				}
-			}
-		);
+		let movement = new Vector3();
+		movement.setX(horizontal * 10);
+		movement.setZ(vertical * 10);
+		player.move(movement);
+		// globals.update(
+		// 	{
+		// 		player: {
+		// 			x: player.object.position.x,
+		// 			z: player.object.position.z,
+		// 		}
+		// 	}
+		// );
 		if (buttonA) {
-			// console.log(globals.current());
-			// console.log(world);
-			// console.log(player.body.collider);
+			console.log("A Pressed");
+		}
+		if (buttonB) {
+			console.log("B Pressed");
 		}
 	}
 });

@@ -16,6 +16,17 @@ export interface EntityBuilder {
 	applyMaterial(texturePath: string | null, color: number, repeat: Vector2): void;
 }
 
+// TODO: move this somewhere appropriate
+export function pixelTexture(texture: THREE.Texture) {
+	texture.minFilter = THREE.NearestFilter;
+	texture.magFilter = THREE.NearestFilter;
+	texture.wrapS = THREE.ClampToEdgeWrapping;
+	texture.wrapT = THREE.ClampToEdgeWrapping;
+	texture.format = THREE.RGBFormat;
+	texture.flipY = false;
+	return texture;
+}
+
 export interface BaseOptions {
 	showDebug?: boolean;
 	debugColor?: number;
