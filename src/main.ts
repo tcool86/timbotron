@@ -37,6 +37,7 @@ const game = new Game({
 			radius: 1.0
 		});
 		const ground = createBox({
+			showDebug: true,
 			fixed: true,
 			texturePath: grassTest,
 			textureSize: new Vector2(8, 8),
@@ -75,7 +76,7 @@ const game = new Game({
 		const { horizontal, vertical, buttonA, buttonB } = inputs[0];
 		let moveVector = new Vector3(
 			horizontal * 10,
-			(buttonA) || -(buttonB),
+			(buttonA * 10) || -(buttonB * 10),
 			vertical * 10,
 		);
 		player.move(moveVector);

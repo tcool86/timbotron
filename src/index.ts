@@ -1,5 +1,5 @@
 import Game from './lib/Game';
-import Actor from './lib/Actor';
+import Actor from './lib/Entities/Actor';
 import Entity from './lib/Entities/Entity';
 import Stage from './lib/Stage';
 import Globals from './lib/Globals';

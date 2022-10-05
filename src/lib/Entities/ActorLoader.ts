@@ -1,7 +1,7 @@
 import * as THREE from 'three';
 import { FBXLoader } from 'three/examples/jsm/loaders/FBXLoader';
 // import run from '../models/run.fbx?url';
-import idle from '../models/hook.fbx?url';
+import idle from '../../models/hook.fbx?url';
 
 export default function pixelTexture(texture: THREE.Texture) {
 	texture.minFilter = THREE.NearestFilter;

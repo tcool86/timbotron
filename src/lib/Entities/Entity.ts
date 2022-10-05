@@ -108,6 +108,27 @@ export default class Entity implements EntityBuilder {
 		world.createCollider(colliderDesc, this.body);
 	}
 
+	collisionCustomGeometry(geometry: THREE.BufferGeometry) {
+		const { world } = this.stageRef;
+
+		geometry.computeBoundingBox();
+		let hitBox = geometry.boundingBox;
+
+		let size = new THREE.Vector3();
+		hitBox?.getSize(size);
+
+		let sphere = new THREE.Sphere();
+		hitBox?.getBoundingSphere(sphere);
+
+		let colliderDesc = RAPIER.ColliderDesc.capsule((size.y) / 4, sphere.radius / 4);
+		colliderDesc.setTranslation(0, 1, 0);
+
+		this.body.setTranslation(new RAPIER.Vector3(0, size.y / 4, 0), true);
+		world.createCollider(colliderDesc, this.body);
+
+		this.createDebugMesh(geometry, new Vector3(), 0xFFff00);
+	}
+
 	collisionStatic() {
 		this.body.setBodyType(RAPIER.RigidBodyType.Fixed);
 	}

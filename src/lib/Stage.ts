@@ -4,9 +4,10 @@ import { EffectComposer } from 'three/examples/jsm/postprocessing/EffectComposer
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
 // import RenderPass from './rendering/RenderPixelatedPass';
 import RenderPass from './rendering/RenderPass';
-import { ActorLoader } from './ActorLoader';
-import Entity, { TriggerEntity } from './Entities/Entity';
-import Actor from './Actor';
+import { ActorLoader } from './Entities/ActorLoader';
+import Entity from './Entities/Entity';
+import { TriggerEntity } from './Entities/Triggers';
+import Actor from './Entities/Actor';
 
 interface EntityColliderData {
 	id: string;

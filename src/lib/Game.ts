@@ -9,7 +9,7 @@ import { materials } from './Entities/Materials';
 import Gamepad, { ControllerInput } from './Gamepad';
 
 import { Clock } from 'three';
-import Actor from './Actor';
+import Actor from './Entities/Actor';
 
 export interface LoopInterface {
 	ticks: number;
