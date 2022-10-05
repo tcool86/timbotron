@@ -4,7 +4,7 @@ import Stage from './Stage';
 import { Menu } from './Menu';
 import Entity from './Entities/Entity';
 import { Primitives, PrimitiveOptions } from './Entities/Primitives';
-import { Triggers, TriggerOptions } from './Entities/Triggers';
+import { Triggers, TriggerOptions, TriggerEntity } from './Entities/Triggers';
 import { materials } from './Entities/Materials';
 import Gamepad, { ControllerInput } from './Gamepad';
 
@@ -24,7 +24,7 @@ export interface SetupInterface {
 		createSphere(options: PrimitiveOptions): Entity;
 	};
 	triggers: {
-		createAreaTrigger(options: TriggerOptions): Entity;
+		createAreaTrigger(options: TriggerOptions): TriggerEntity;
 	}
 	materials: {
 		metal: THREE.Material;

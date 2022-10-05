@@ -1,7 +1,7 @@
 import * as THREE from 'three';
 import Stage from '../Stage';
 import { Vector3 } from '../Util';
-import Entity, { TriggerEntity } from './Entity';
+import Entity, { BaseOptions } from './Entity';
 
 /**
  * Functions for creating primitive geometries easily
@@ -9,8 +9,13 @@ import Entity, { TriggerEntity } from './Entity';
  * 
  */
 
-export interface TriggerOptions {
-	debugColor?: number;
+export interface TriggerEntity extends Entity {
+	action?: Function;
+	exitAction?: Function;
+	enteredTrigger?: boolean;
+}
+
+export interface TriggerOptions extends BaseOptions {
 	width?: number;
 	height?: number;
 	depth?: number;
@@ -33,7 +38,7 @@ export function createAreaTrigger(options: TriggerOptions, stage: Stage) {
 	entity.createBody(position);
 	entity.collisionRectangular(size, true);
 	entity.collisionStatic();
-	entity.showDebug = true;
+	entity.showDebug = options?.showDebug ?? false;
 	entity.action = options.action;
 	entity.exitAction = options.exitAction;
 	stage.children.set(entity.id, entity);

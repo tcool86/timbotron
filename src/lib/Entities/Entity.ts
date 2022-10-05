@@ -16,10 +16,9 @@ export interface EntityBuilder {
 	applyMaterial(texturePath: string | null, color: number, repeat: Vector2): void;
 }
 
-export interface TriggerEntity extends Entity {
-	action?: Function;
-	exitAction?: Function;
-	enteredTrigger?: boolean;
+export interface BaseOptions {
+	showDebug?: boolean;
+	debugColor?: number;
 }
 
 export default class Entity implements EntityBuilder {
@@ -156,6 +155,11 @@ export default class Entity implements EntityBuilder {
 			this.debug.rotation.set(rotationVector.x, rotationVector.y, rotationVector.z);
 			const material = this.debug.material as THREE.MeshPhongMaterial;
 			material.color?.set(this.debugColor);
+		} else {
+			const material = this.debug?.material as THREE.MeshPhongMaterial;
+			material?.setValues({
+				visible: false
+			});
 		}
 	}
 

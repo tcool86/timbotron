@@ -4,7 +4,6 @@ import { SetupInterface } from './lib/Game';
 import grassTest from './assets/grass.jpg?url';
 import metalTest from './assets/metal-box.jpg?url';
 import woodTest from './assets/wood-box.jpg?url';
-import { TriggerEntity } from './lib/Entities/Entity';
 
 const app = document.querySelector<HTMLDivElement>('#app')!;
 
@@ -22,6 +21,8 @@ const game = new Game({
 		const { metal } = materials;
 
 		const box = createBox({
+			debugColor: 0xBADA55,
+			showDebug: true,
 			texturePath: woodTest,
 			position: new Vector3(-3, 0.5, 3),
 			width: 2,
@@ -43,8 +44,9 @@ const game = new Game({
 			height: 0.2,
 			depth: 100
 		});
-		let boxTrigger: TriggerEntity = createAreaTrigger({
+		let boxTrigger = createAreaTrigger({
 			debugColor: 0x994409,
+			showDebug: true,
 			position: new Vector3(0, 3.5, -20),
 			width: 30,
 			height: 10,

@@ -1,7 +1,7 @@
 import * as THREE from 'three';
 import Stage from '../Stage';
 import { Vector3, Vector2 } from '../Util';
-import Entity from './Entity';
+import Entity, { BaseOptions } from './Entity';
 
 /**
  * Functions for creating primitive geometries easily
@@ -9,10 +9,10 @@ import Entity from './Entity';
  * 
  */
 
-export interface PrimitiveOptions {
+export interface PrimitiveOptions extends BaseOptions {
 	material?: THREE.Material;
 	texturePath?: string;
-	textureSize?: THREE.Vector2; // TODO: this could be automated
+	textureSize?: Vector2; // TODO: this could be automated
 	color?: number;
 	width?: number;
 	height?: number;
@@ -43,7 +43,8 @@ export function createBox(options: PrimitiveOptions, stage: Stage) {
 	if (options?.fixed) {
 		entity.collisionStatic();
 	}
-	entity.showDebug = true;
+	entity.debugColor = options?.debugColor ?? 0xffffff;
+	entity.showDebug = options?.showDebug ?? false;
 	stage.children.set(entity.id, entity);
 	return entity;
 }
@@ -61,7 +62,8 @@ export function createSphere(options: PrimitiveOptions, stage: Stage) {
 	entity.collisionSpherical(radius);
 	entity.body.setAdditionalMass(0.02, true);
 	entity.body.setAngularDamping(0.1);
-	entity.showDebug = true;
+	entity.debugColor = options?.debugColor ?? 0xffffff;
+	entity.showDebug = options?.showDebug ?? false;
 	stage.children.set(entity.id, entity);
 	return entity;
 }
