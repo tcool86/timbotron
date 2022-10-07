@@ -1,14 +1,14 @@
 import './style.css'
-import Pyramid, { LoopInterface } from './index';
-import { SetupInterface } from './lib/Game';
+import Pyramid from 'pyramid-game-lib';
 import grassTest from './assets/grass.jpg?url';
 import metalTest from './assets/metal-box.jpg?url';
 import woodTest from './assets/wood-box.jpg?url';
-import idle from './models/hook.fbx?url';
+import idle from './models/run.fbx?url';
 
 const app = document.querySelector<HTMLDivElement>('#app')!;
 
-const { Game, Globals, Vector3, Vector2 } = Pyramid();
+const { Game, Globals, Util } = Pyramid;
+const { Vector3, Vector2 } = Util;
 
 const globals = new Globals({
 	score: 0,
@@ -16,7 +16,7 @@ const globals = new Globals({
 })
 
 const game = new Game({
-	setup: async ({ primitives, materials, triggers, loaders }: SetupInterface) => {
+	setup: async ({ primitives, materials, triggers, loaders }: any) => {
 		const { createBox, createSphere } = primitives;
 		const { createAreaTrigger } = triggers;
 		const { createActor } = loaders;
@@ -76,7 +76,7 @@ const game = new Game({
 			files: [idle]
 		})
 	},
-	loop: ({ inputs, player }: LoopInterface) => {
+	loop: ({ inputs, player }: any) => {
 		const { horizontal, vertical, buttonA, buttonB } = inputs[0];
 		let movement = new Vector3();
 		movement.setX(horizontal * 10);

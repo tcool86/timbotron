@@ -9,3 +9,4 @@
 // to check for a default export and re-export it if it exists
 // it's not ideal, but it works pretty well ¯\_(ツ)_/¯
 export * from "../src/index";
+export { default } from "../src/index";

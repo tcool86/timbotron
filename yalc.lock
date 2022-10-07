@@ -1,0 +1,9 @@
+{
+  "version": "v1",
+  "packages": {
+    "pyramid-game-lib": {
+      "signature": "7807ce1598b86022bd9e753fb045a27a",
+      "file": true
+    }
+  }
+}
