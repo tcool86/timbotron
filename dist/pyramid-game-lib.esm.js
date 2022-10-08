@@ -1,1 +1,0 @@
-/Users/timothycool/Projects/timbotron/src/index.ts

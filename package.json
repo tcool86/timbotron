@@ -1,9 +1,6 @@
 {
   "name": "timbotron",
-  "private": true,
   "version": "0.0.0",
-  "main": "dist/pyramid-game-lib.cjs.js",
-  "module": "dist/pyramid-game-lib.esm.js",
   "scripts": {
     "start": "npx http-server ./dist",
     "dev": "vite",
