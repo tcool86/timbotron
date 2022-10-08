@@ -2143,8 +2143,10 @@ postcss@^8.4.13:
     picocolors "^1.0.0"
     source-map-js "^1.0.2"
 
-"pyramid-game-lib@file:.yalc/pyramid-game-lib":
+pyramid-game-lib@^1.0.0:
   version "1.0.0"
+  resolved "https://registry.yarnpkg.com/pyramid-game-lib/-/pyramid-game-lib-1.0.0.tgz#a399889311ad7d5401307b1a42f242368446b1a7"
+  integrity sha512-qF1PpYK1c/SkBQdH51Qi/fuYiq8+5xZxEt6I9pxgq2Nx8hyEAoPIQRqGA374Wh0iEWk0cFnJiM/+XfWxvwhxvA==
   dependencies:
     "@dimforge/rapier3d" "^0.9.0"
     "@dimforge/rapier3d-compat" "^0.9.0"
