@@ -3,7 +3,8 @@ import Pyramid from 'pyramid-game-lib';
 import grassTest from './assets/grass.jpg?url';
 import metalTest from './assets/metal-box.jpg?url';
 import woodTest from './assets/wood-box.jpg?url';
-import idle from './models/run.fbx?url';
+import idle from './models/idle.fbx?url';
+import run from './models/run.fbx?url';
 
 const app = document.querySelector<HTMLDivElement>('#app')!;
 
@@ -13,7 +14,9 @@ const { Vector3, Vector2 } = Util;
 const globals = new Globals({
 	score: 0,
 	player: { x: 0, z: 0 }
-})
+});
+
+let avatar: { animate: (arg0: number) => void; };
 
 const game = new Game({
 	setup: async ({ primitives, materials, triggers, loaders }: any) => {
@@ -23,15 +26,19 @@ const game = new Game({
 		const { metal } = materials;
 
 		// Box
-		createBox({
-			debugColor: 0xBADA55,
-			showDebug: true,
-			texturePath: woodTest,
-			position: new Vector3(-3, 0.5, 3),
-			width: 2,
-			height: 2,
-			depth: 2
-		});
+		for (let i = 0; i < 100; i++) {
+			let x = (i > 50) ? i - 50 : -i;
+			createBox({
+				debugColor: 0xBADA55,
+				showDebug: true,
+				texturePath: woodTest,
+				position: new Vector3(x, (i * 3), x / 3),
+				width: 2,
+				height: 2,
+				depth: 2
+			});
+
+		}
 		// Sphere
 		createSphere({
 			color: 0xFF9999,
@@ -72,8 +79,8 @@ const game = new Game({
 				}
 			}
 		});
-		await createActor({
-			files: [idle]
+		avatar = await createActor({
+			files: [idle, run]
 		})
 	},
 	loop: ({ inputs, player }: any) => {
@@ -82,6 +89,14 @@ const game = new Game({
 		movement.setX(horizontal * 10);
 		movement.setZ(vertical * 10);
 		player.move(movement);
+		if (avatar) {
+			if (Math.abs(movement.x) > 0.2 || Math.abs(movement.z) > 0.2) {
+				console.log('should switch animations');
+				avatar.animate(1);
+			} else {
+				avatar.animate(0);
+			}
+		}
 		// globals.update(
 		// 	{
 		// 		player: {
