@@ -16,6 +16,9 @@ const globals = new Globals({
 	player: { x: 0, z: 0 }
 });
 
+const ammo: any = [];
+let currentShot = 0;
+
 let avatar: { animate: (arg0: number) => void; };
 
 const game = new Game({
@@ -47,6 +50,29 @@ const game = new Game({
 			position: new Vector3(-3, 0.5, 10),
 			radius: 1.0
 		});
+		ammo.push(
+			createSphere({
+				color: 0xffff00,
+				material: metal,
+				texturePath: metalTest,
+				position: new Vector3(0, 1, 0),
+				radius: 0.2
+			}),
+			createSphere({
+				color: 0xffff00,
+				material: metal,
+				texturePath: metalTest,
+				position: new Vector3(0, 1, 0),
+				radius: 0.2
+			}),
+			createSphere({
+				color: 0xffff00,
+				material: metal,
+				texturePath: metalTest,
+				position: new Vector3(0, 1, 0),
+				radius: 0.2
+			}),
+		);
 		// Ground
 		createBox({
 			showDebug: true,
@@ -107,6 +133,10 @@ const game = new Game({
 		// );
 		if (buttonA) {
 			console.log("A Pressed");
+			ammo[currentShot].body.setTranslation(new Vector3(player.object.position.x, 2.0, player.object.position.z));
+			ammo[currentShot].body.applyImpulse(new Vector3(0, 0, 0.5));
+			currentShot++;
+			currentShot = currentShot % 3;
 		}
 		if (buttonB) {
 			console.log("B Pressed");
