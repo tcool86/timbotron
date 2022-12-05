@@ -18,6 +18,7 @@ const globals = new Globals({
 
 const ammo: any = [];
 let currentShot = 0;
+let lastMovement = new Vector3();
 
 let avatar: { animate: (arg0: number) => void; };
 
@@ -109,17 +110,21 @@ const game = new Game({
 			files: [idle, run]
 		})
 	},
-	loop: ({ inputs, player }: any) => {
+	loop: ({ inputs, player }) => {
 		const { horizontal, vertical, buttonA, buttonB } = inputs[0];
 		let movement = new Vector3();
 		movement.setX(horizontal * 10);
 		movement.setZ(vertical * 10);
+
 		player.move(movement);
 		if (avatar) {
 			if (Math.abs(movement.x) > 0.2 || Math.abs(movement.z) > 0.2) {
 				console.log('should switch animations');
+				lastMovement = movement;
+				player.rotateInDirection(movement);
 				avatar.animate(1);
 			} else {
+				player.rotateInDirection(lastMovement);
 				avatar.animate(0);
 			}
 		}
@@ -133,8 +138,8 @@ const game = new Game({
 		// );
 		if (buttonA) {
 			console.log("A Pressed");
-			ammo[currentShot].body.setTranslation(new Vector3(player.object.position.x, 2.0, player.object.position.z));
-			ammo[currentShot].body.applyImpulse(new Vector3(0, 0, 0.5));
+			ammo[currentShot].body.setTranslation(new Vector3(player.object.position.x, 2, player.object.position.z));
+			ammo[currentShot].body.applyImpulse(new Vector3(player.object.rotation.y, 0, 0.5));
 			currentShot++;
 			currentShot = currentShot % 3;
 		}
