@@ -21,6 +21,16 @@ let currentShot = 0;
 let lastMovement = new Vector3();
 
 let avatar: { animate: (arg0: number) => void; };
+const projectileSphere = (mat: any) => {
+	return {
+		isSensor: true,
+		color: 0xffff00,
+		material: mat,
+		texturePath: metalTest,
+		position: new Vector3(0, -1000, 0),
+		radius: 0.2
+	}
+}
 
 const game = new Game({
 	setup: async ({ primitives, materials, triggers, loaders }: any) => {
@@ -52,27 +62,9 @@ const game = new Game({
 			radius: 1.0
 		});
 		ammo.push(
-			createSphere({
-				color: 0xffff00,
-				material: metal,
-				texturePath: metalTest,
-				position: new Vector3(0, 1, 0),
-				radius: 0.2
-			}),
-			createSphere({
-				color: 0xffff00,
-				material: metal,
-				texturePath: metalTest,
-				position: new Vector3(0, 1, 0),
-				radius: 0.2
-			}),
-			createSphere({
-				color: 0xffff00,
-				material: metal,
-				texturePath: metalTest,
-				position: new Vector3(0, 1, 0),
-				radius: 0.2
-			}),
+			createSphere(projectileSphere(metal)),
+			createSphere(projectileSphere(metal)),
+			createSphere(projectileSphere(metal)),
 		);
 		// Ground
 		createBox({
@@ -138,8 +130,10 @@ const game = new Game({
 		// );
 		if (buttonA) {
 			console.log("A Pressed");
-			ammo[currentShot].body.setTranslation(new Vector3(player.object.position.x, 2, player.object.position.z));
-			ammo[currentShot].body.applyImpulse(new Vector3(player.object.rotation.y, 0, 0.5));
+			const normalizeMovement = lastMovement.normalize();
+			const multiplyMovement = normalizeMovement.multiply(new Vector3(200, 200, 200));
+			ammo[currentShot].body.setTranslation(new Vector3(player.object.position.x, 3, player.object.position.z));
+			ammo[currentShot].body.setLinvel(multiplyMovement, true);
 			currentShot++;
 			currentShot = currentShot % 3;
 		}
@@ -151,33 +145,4 @@ const game = new Game({
 game.ready.then(() => {
 	console.log(globals.current());
 	app.appendChild(game.domElement());
-})
-
-/**
-	import { Game, Stage, Entity, MapLoader } from 'pyramid';
-
-	const stage = new Stage({
-		...options
-	});
-
-	const entity = new Entity({
-		...options
-	});
-
-	stage.add(entity);
-
-	Game.loop(({ input, stages, entities }) => {
-		const { p1 } = input;
-		const playerEntity = entities.getPlayer1();
-		if (p1.up > 0.5) {
-			playerEntity.moveX(5);
-		}else if (p1.down > 0.5) {
-			playerEntity.moveX(-5);
-		}
-	});
-
-	playerEntity.collision('spike', ({entity, spike}) => {
-		
-	})
-
- */
+});
