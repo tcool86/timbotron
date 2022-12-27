@@ -1,5 +1,6 @@
 import Pyramid from "pyramid-game-lib";
 import idle from './models/idle.fbx?url';
+// import idle from './models/gangnam-style.fbx?url';
 import run from './models/run.fbx?url';
 
 const { Actor, Collision } = Pyramid.Entity;
@@ -19,7 +20,7 @@ class Timbot {
 	}
 
 	loop(delta: number) {
-		console.log(delta);
+		// console.log(delta);
 	}
 
 	@Collision('box')

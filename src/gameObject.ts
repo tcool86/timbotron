@@ -49,3 +49,16 @@ export const grassGround = () => {
 		depth: 100
 	}
 };
+
+export const playerAreaTrigger = (enter: Function, exit: Function) => {
+	return {
+		debugColor: 0x994409,
+		showDebug: true,
+		position: new Vector3(0, 3.5, -20),
+		width: 30,
+		height: 10,
+		depth: 15,
+		action: enter,
+		exitAction: exit
+	}
+}

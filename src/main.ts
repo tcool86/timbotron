@@ -1,6 +1,12 @@
 import './style.css'
 import Pyramid from 'pyramid-game-lib';
-import { projectileSphere, woodBox, metalBall, grassGround } from './gameObject';
+import {
+	projectileSphere,
+	woodBox,
+	metalBall,
+	grassGround,
+	playerAreaTrigger,
+} from './gameObject';
 import Timbot from './player';
 
 const app = document.querySelector<HTMLDivElement>('#app')!;
@@ -26,49 +32,39 @@ class Timbotron {
 		this.lastMovement = new Vector3();
 	}
 
-	async setup({ primitives, materials, triggers, loaders }: any) {
-		const { createBox, createSphere } = primitives;
-		const { createAreaTrigger } = triggers;
+	async setup({ commands, materials, loaders }: any) {
 		const { createActor } = loaders;
 		const { metal } = materials;
-
+		const { create } = commands;
+ 
 		// Box
 		for (let i = 0; i < 100; i++) {
 			let x = (i > 50) ? i - 50 : -i;
-			createBox(woodBox(x, i));
+			create(woodBox(x, i));
 		}
 		// Sphere
-		createSphere(metalBall(metal));
+		create(metalBall(metal));
 
 		this.ammo.push(
-			createSphere(projectileSphere(metal)),
-			createSphere(projectileSphere(metal)),
-			createSphere(projectileSphere(metal)),
+			create(projectileSphere(metal)),
+			create(projectileSphere(metal)),
+			create(projectileSphere(metal)),
 		);
 		// Ground
-		createBox(grassGround());
-		let boxTrigger = createAreaTrigger({
-			debugColor: 0x994409,
-			showDebug: true,
-			position: new Vector3(0, 3.5, -20),
-			width: 30,
-			height: 10,
-			depth: 15,
-			action: () => {
-				if (!boxTrigger.enteredTrigger) {
-					console.log("entered trigger area");
-					boxTrigger.debugColor = 0xBADA55;
-					boxTrigger.enteredTrigger = true;
-				}
-			},
-			exitAction: () => {
-				if (boxTrigger.enteredTrigger) {
-					console.log("left trigger area");
-					boxTrigger.debugColor = 0x994409;
-					boxTrigger.enteredTrigger = false;
-				}
+		create(grassGround());
+		let boxTrigger = create(playerAreaTrigger(() => {
+			if (!boxTrigger.enteredTrigger) {
+				console.log("entered trigger area");
+				boxTrigger.debugColor = 0xBADA55;
+				boxTrigger.enteredTrigger = true;
 			}
-		});
+		},() => {
+			if (boxTrigger.enteredTrigger) {
+				console.log("left trigger area");
+				boxTrigger.debugColor = 0x994409;
+				boxTrigger.enteredTrigger = false;
+			}
+		}));
 		this.avatar = await createActor(Timbot);
 	}
 
