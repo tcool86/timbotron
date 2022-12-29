@@ -18,7 +18,7 @@
     "@dimforge/rapier3d": "^0.9.0",
     "@dimforge/rapier3d-compat": "^0.9.0",
     "@types/three": "^0.143.1",
-    "pyramid-game-lib": "file:.yalc/pyramid-game-lib",
+    "pyramid-game-lib": "2.0.4",
     "stateshot": "^1.3.4",
     "three": "^0.143.0"
   }
