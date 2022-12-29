@@ -2,7 +2,7 @@
   "version": "v1",
   "packages": {
     "pyramid-game-lib": {
-      "signature": "a687f5e79f5e3f394d0b44a937f1dafa",
+      "signature": "56ab48ff4c3937eabb001b780f7e3b98",
       "file": true,
       "replaced": "^1.0.5"
     }

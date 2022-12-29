@@ -16,12 +16,11 @@ class Timbot {
 		// ammo? health?
 	}
 
-	setup() {
-	}
+	setup() { }
 
-	loop(delta: number) {
-		// console.log(delta);
-	}
+	// loop({ input, actor, delta }: any) {
+	// 	console.log(delta);
+	// }
 
 	@Collision('box')
 	breakBox() {

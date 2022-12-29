@@ -1,13 +1,13 @@
 import './style.css'
 import Pyramid from 'pyramid-game-lib';
-import {
-	projectileSphere,
-	woodBox,
-	metalBall,
-	grassGround,
-	playerAreaTrigger,
-} from './gameObject';
 import Timbot from './player';
+import {
+	WoodBox,
+	ProjectileSphere,
+	GrassGround,
+	PlayerGoal,
+	SpecialSphere
+} from './gameObjects';
 
 const app = document.querySelector<HTMLDivElement>('#app')!;
 
@@ -32,40 +32,40 @@ class Timbotron {
 		this.lastMovement = new Vector3();
 	}
 
-	async setup({ commands, materials, loaders }: any) {
-		const { createActor } = loaders;
-		const { metal } = materials;
-		const { create } = commands;
- 
-		// Box
-		for (let i = 0; i < 100; i++) {
-			let x = (i > 50) ? i - 50 : -i;
-			create(woodBox(x, i));
-		}
-		// Sphere
-		create(metalBall(metal));
+	async setup({ commands }: any) {
+		const { create } = await commands;
 
+		create(GrassGround);
+		for (let i = 0; i < 30; i++) {
+			let x = (i > 15) ? i - 20 : -i;
+			const positionVector = new Vector3(2 + x, 3 + i, 5);
+			create(WoodBox, { position: positionVector });
+		}
 		this.ammo.push(
-			create(projectileSphere(metal)),
-			create(projectileSphere(metal)),
-			create(projectileSphere(metal)),
+			await create(ProjectileSphere),
+			await create(ProjectileSphere),
+			await create(ProjectileSphere),
 		);
-		// Ground
-		create(grassGround());
-		let boxTrigger = create(playerAreaTrigger(() => {
-			if (!boxTrigger.enteredTrigger) {
-				console.log("entered trigger area");
-				boxTrigger.debugColor = 0xBADA55;
-				boxTrigger.enteredTrigger = true;
+
+		create(SpecialSphere);
+
+		const trigger = await create(PlayerGoal, {
+			onEnter: () => {
+				if (!trigger.hasEntered) {
+					console.log("entered trigger area");
+					trigger.debugColor = 0xBADA55;
+					trigger.hasEntered = true;
+				}
+			},
+			onExit: () => {
+				if (trigger.hasEntered) {
+					console.log("entered trigger area");
+					trigger.debugColor = 0x994409;
+					trigger.hasEntered = false;
+				}
 			}
-		},() => {
-			if (boxTrigger.enteredTrigger) {
-				console.log("left trigger area");
-				boxTrigger.debugColor = 0x994409;
-				boxTrigger.enteredTrigger = false;
-			}
-		}));
-		this.avatar = await createActor(Timbot);
+		})
+		this.avatar = await create(Timbot);
 	}
 
 	loop({ inputs, player }: any) {
