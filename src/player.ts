@@ -26,7 +26,7 @@ class Timbot {
 		);
 	}
 
-	loop({ inputs, entity, delta }: any) {
+	loop({ inputs, entity }: any) {
 		const { horizontal, vertical, buttonA, buttonB } = inputs[0];
 		let movement = new Vector3();
 		movement.setX(horizontal * 10);
