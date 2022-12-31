@@ -1,20 +1,21 @@
 import Pyramid from "pyramid-game-lib";
 import idle from './models/idle.fbx?url';
-// import idle from './models/gangnam-style.fbx?url';
+import gangnam from './models/gangnam-style.fbx?url';
 import run from './models/run.fbx?url';
-import { ProjectileSphere } from './gameObjects';
+import { ProjectileSphere, testCollisionKey } from './gameObjects';
 
 const { Actor, Collision } = Pyramid.Entity;
 const { Vector3 } = Pyramid.Util;
 
 
 @Actor({
-	files: [idle, run],
+	files: [idle, run, gangnam],
 })
 class Timbot {
 	ammo: any = [];
 	currentShot: number = 0;
 	lastMovement = new Vector3();
+	boxCount = 0;
 
 	async setup({ commands }: any) {
 		const { create } = await commands;
@@ -25,21 +26,27 @@ class Timbot {
 		);
 	}
 
-	loop({ inputs, entity }: any) {
+	loop({ inputs, entity, delta }: any) {
 		const { horizontal, vertical, buttonA, buttonB } = inputs[0];
 		let movement = new Vector3();
 		movement.setX(horizontal * 10);
 		movement.setZ(vertical * 10);
-
+		const isMoving = Math.abs(movement.x) > 3 || Math.abs(movement.z) > 3;
+		const celebrate = this.boxCount > 100;
+		if (celebrate && !isMoving) {
+			entity.animate(2);
+		}
+		if (!isMoving) {
+			entity.move(new Vector3());
+			entity.rotateInDirection(this.lastMovement);
+		}
 		if (entity?.animate) {
-			if (Math.abs(movement.x) > 3 || Math.abs(movement.z) > 3) {
+			if (isMoving) {
 				entity.move(movement);
 				this.lastMovement = movement;
 				entity.rotateInDirection(movement);
 				entity.animate(1);
-			} else {
-				entity.move(new Vector3());
-				entity.rotateInDirection(this.lastMovement);
+			} else if (!celebrate) {
 				entity.animate(0);
 			}
 		}
@@ -57,9 +64,18 @@ class Timbot {
 		}
 	}
 
-	@Collision('box')
-	breakBox() {
-
+	@Collision(testCollisionKey)
+	breakBox({ target }: any) {
+		this.boxCount++;
+		const progress = Math.round((this.boxCount / 100) * 100);
+		const uiElement = document.getElementById('progress');
+		if (uiElement) {
+			uiElement.innerText = `${Math.min(progress, 100)}%`;
+			if (progress >= 100) {
+				uiElement.style.color = 'lightgreen'
+			}
+		}
+		target.body.applyImpulse(new Vector3(0, 100, 0));
 	}
 }
 

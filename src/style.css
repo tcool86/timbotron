@@ -8,16 +8,26 @@ html {
 }
 
 body {
+	display: flex;
+	align-items: center;
+	justify-content: center;
 	margin: 0;
 	padding: 0;
+	height: 100vh;
 }
 
 #app {
 	font-family: Avenir, Helvetica, Arial, sans-serif;
 	-webkit-font-smoothing: antialiased;
 	-moz-osx-font-smoothing: grayscale;
-	text-align: center;
-	display: flex;
-	align-content: flex-start;
-	justify-content: center;
+}
+
+#progress {
+	position: absolute;
+	top: 0;
+	left: 1em;
+	z-index: 100;
+	color: yellow;
+	text-shadow: 1px 1px 1px #2c3e50;
+	font-size: 42px;
 }

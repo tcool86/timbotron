@@ -19,7 +19,7 @@ const globals = new Globals({
 	player: { x: 0, z: 0 }
 });
 
-@Game(app)
+@Game({ app, globals })
 class Timbotron {
 	async setup({ commands }: any) {
 		const { create } = await commands;
@@ -50,7 +50,7 @@ class Timbotron {
 				}
 			}
 		})
-		await create(Timbot);
+		create(Timbot);
 	}
 
 	loop() { }

@@ -5,13 +5,16 @@ import metalTest from './assets/metal-box.jpg?url';
 const { Vector3, Vector2 } = Pyramid.Util;
 const { Materials, Box, Sphere, Trigger } = Pyramid.Entity;
 
+export const testCollisionKey = 'test_collision';
+
 @Box({
 	debugColor: 0xBADA55,
 	showDebug: true,
 	texturePath: woodTest,
 	width: 2,
 	height: 2,
-	depth: 2
+	depth: 2,
+	collisionKey: testCollisionKey
 })
 export class WoodBox {
 	setup({ entity }: any) {
