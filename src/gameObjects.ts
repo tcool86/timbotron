@@ -40,6 +40,9 @@ export class GrassGround { }
 })
 export class ProjectileSphere { }
 
+@Box()
+export class SimpleBox { }
+
 @Sphere({
 	color: 0xFF0000,
 	material: Materials.metal,

@@ -2051,9 +2051,8 @@
     "picocolors" "^1.0.0"
     "source-map-js" "^1.0.2"
 
-"pyramid-game-lib@2.0.4":
-  "integrity" "sha512-WondoVAgkCKA2AUgN9B062Hgo9tj09nG+mPZ6V14kIgsJtKUpV5tsg5e//7IOI6YYO6HXrDYgTt9keOgD7e+cQ=="
-  "resolved" "https://registry.npmjs.org/pyramid-game-lib/-/pyramid-game-lib-2.0.4.tgz"
+"pyramid-game-lib@file:.yalc/pyramid-game-lib":
+  "resolved" "file:.yalc/pyramid-game-lib"
   "version" "2.0.4"
   dependencies:
     "@dimforge/rapier3d" "^0.9.0"
