@@ -2071,10 +2071,10 @@ postcss@^8.4.13:
     picocolors "^1.0.0"
     source-map-js "^1.0.2"
 
-pyramid-game-lib@2.1.8:
-  version "2.1.8"
-  resolved "https://registry.yarnpkg.com/pyramid-game-lib/-/pyramid-game-lib-2.1.8.tgz#dbdd0cf3b36f20a1a7f00d84112c0cebd4c34794"
-  integrity sha512-zZWV+NrCvhGEGtxBfJsFC/C47VEXSU8NF+799vmZzI0rzNfOVTrRN7FaPgW/iUqoYwpxs5JqBFzVGibEQEUmvg==
+pyramid-game-lib@^2.1.10:
+  version "2.1.10"
+  resolved "https://registry.yarnpkg.com/pyramid-game-lib/-/pyramid-game-lib-2.1.10.tgz#aed2298d33aafcb81c773ff6c677031eba1f0675"
+  integrity sha512-5bNhMmXAQFcBL8iO+I7aaja0UHyoYpQSKQ/g2zPsBI5y9YodL5Of8wYbFLhMeGXLFiU84vtajde464Fi3QFsiQ==
   dependencies:
     "@dimforge/rapier3d" "^0.9.0"
     "@dimforge/rapier3d-compat" "^0.9.0"
