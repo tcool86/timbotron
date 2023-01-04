@@ -2,11 +2,10 @@ import Pyramid from "pyramid-game-lib";
 import idle from './models/idle.fbx?url';
 import gangnam from './models/gangnam-style.fbx?url';
 import run from './models/run.fbx?url';
-import { ProjectileSphere, testCollisionKey } from './gameObjects';
+import { Bullet, testCollisionKey } from './gameObjects';
 
 const { Actor, Collision } = Pyramid.Entity;
 const { Vector3 } = Pyramid.Util;
-
 
 @Actor({
 	files: [idle, run, gangnam],
@@ -20,9 +19,9 @@ class Timbot {
 	async setup({ commands }: any) {
 		const { create } = await commands;
 		this.ammo.push(
-			await create(ProjectileSphere),
-			await create(ProjectileSphere),
-			await create(ProjectileSphere),
+			await create(Bullet),
+			await create(Bullet),
+			await create(Bullet),
 		);
 	}
 

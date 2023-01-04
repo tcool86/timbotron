@@ -3,9 +3,13 @@ import grassTest from './assets/grass.jpg?url';
 import woodTest from './assets/wood-box.jpg?url';
 import metalTest from './assets/metal-box.jpg?url';
 const { Vector3, Vector2 } = Pyramid.Util;
-const { Materials, Box, Sphere, Trigger } = Pyramid.Entity;
+const { Materials, Box, Sphere, Trigger, Collision } = Pyramid.Entity;
 
 export const testCollisionKey = 'test_collision';
+
+interface DestructibleBox {
+	health: number;
+}
 
 @Box({
 	debugColor: 0xBADA55,
@@ -16,7 +20,8 @@ export const testCollisionKey = 'test_collision';
 	depth: 2,
 	collisionKey: testCollisionKey
 })
-export class WoodBox {
+export class WoodBox implements DestructibleBox {
+	health = 10;
 	setup({ entity }: any) {
 		console.log(`Entity: ${entity}`);
 	}
@@ -39,9 +44,20 @@ export class GrassGround { }
 	material: Materials.metal,
 	texturePath: metalTest,
 	position: new Vector3(0, -1000, 0),
-	radius: 0.2
+	radius: 0.2,
+	collisionKey: 'bullet',
+	glow: true
 })
-export class ProjectileSphere { }
+export class Bullet {
+
+	@Collision(testCollisionKey)
+	bulletCollidesTest({ self, target, destroy }: any) {
+		// TODO: custom collision handler still not available
+		const { _ref } = target;
+		(_ref as DestructibleBox).health -= 1;
+		destroy(self);
+	}
+}
 
 @Box()
 export class SimpleBox { }
