@@ -31,7 +31,7 @@ class Timbot {
 		movement.setX(horizontal * 10);
 		movement.setZ(vertical * 10);
 		const isMoving = Math.abs(movement.x) > 3 || Math.abs(movement.z) > 3;
-		const celebrate = this.boxCount > 100;
+		const celebrate = this.boxCount >= 100;
 		if (celebrate && !isMoving) {
 			entity.animate(2);
 		}
@@ -50,10 +50,9 @@ class Timbot {
 			}
 		}
 		if (buttonA) {
-			console.log("A Pressed");
 			const normalizeMovement = this.lastMovement.normalize();
 			const multiplyMovement = normalizeMovement.multiply(new Vector3(200, 200, 200));
-			this.ammo[this.currentShot].body.setTranslation(new Vector3(entity.object.position.x, 3, entity.object.position.z));
+			this.ammo[this.currentShot].body.setTranslation(new Vector3(entity.object.position.x, 2.5, entity.object.position.z));
 			this.ammo[this.currentShot].body.setLinvel(multiplyMovement, true);
 			this.currentShot++;
 			this.currentShot = this.currentShot % 3;
@@ -74,7 +73,8 @@ class Timbot {
 				uiElement.style.color = 'lightgreen'
 			}
 		}
-		target.body.applyImpulse(new Vector3(0, 100, 0));
+		target.debugColor = 0x0000FF;
+		target.body.applyImpulse(new Vector3(0, 5, 0));
 	}
 }
 

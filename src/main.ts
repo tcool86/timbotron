@@ -28,7 +28,7 @@ class Timbotron {
 		create(SimpleBox, { position: new Vector3(4, 4, 0) });
 		for (let i = 0; i < 30; i++) {
 			let x = (i > 15) ? i - 20 : -i;
-			const positionVector = new Vector3(2 + x, 3 + i, 5);
+			const positionVector = new Vector3(5 + x, 10 + i, -10);
 			create(WoodBox, { position: positionVector });
 		}
 
@@ -53,7 +53,15 @@ class Timbotron {
 		create(Timbot);
 	}
 
-	loop() { }
+	loop({ inputs, game }: any) {
+		const { buttonB, buttonA } = inputs[0];
+		if (buttonB) {
+			game.pause = true;
+		}
+		if (buttonA) {
+			game.pause = false;
+		}
+	}
 
 	ready() {
 		console.log(globals);
