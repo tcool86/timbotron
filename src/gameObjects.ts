@@ -8,8 +8,7 @@ const { Materials, Box, Sphere, Trigger, Collision } = Pyramid.Entity;
 export const testCollisionKey = 'test_collision';
 
 interface DestructibleBox {
-	health: Map<string, number>;
-	destroyed: Map<string, boolean>;
+	health: number;
 }
 
 @Box({
@@ -22,20 +21,17 @@ interface DestructibleBox {
 	collisionKey: testCollisionKey
 })
 export class WoodBox implements DestructibleBox {
-	// TODO: container is currently shared amoung all WoodBox objects hence the mappings (will fix this)
-	health = new Map();
-	destroyed = new Map();
+	health = 1;
+	destroyed = false;
+
 	setup({ entity }: any) {
 		console.log(`Entity: ${entity}`);
-		this.health.set(entity.id, 10);
-		this.destroyed.set(entity.id, false);
 	}
 	loop({ entity }: any) {
-		if (this.health.get(entity.id) < 0 && !this.destroyed.get(entity.id)) {
-			console.log(entity.id);
+		if (this.health < 0 && !this.destroyed) {
+			this.destroyed = true;
 			entity.body.setAngvel(new Vector3(1000, 0, 0), true);
 			entity.body.applyImpulse(new Vector3(0, 5, 0), true);
-			this.destroyed.set(entity.id, true);
 		}
 	}
 }
@@ -65,11 +61,9 @@ export class Bullet {
 
 	@Collision(testCollisionKey)
 	bulletCollidesTest({ target }: any) {
-		console.log('collision', target);
 		const { _ref } = target;
-		// TODO: hacks for now until refs aren't treated like containers
-		const health = (_ref as DestructibleBox).health.get(target.id) ?? 0;
-		(_ref as DestructibleBox).health.set(target.id, health - 1);
+		const health = (_ref as DestructibleBox).health ?? 0;
+		(_ref as DestructibleBox).health = health - 1;
 		target.debugColor = 0xFF0000;
 	}
 }
@@ -82,7 +76,8 @@ export class SimpleBox { }
 	material: Materials.metal,
 	texturePath: metalTest,
 	position: new Vector3(3, 2, -3),
-	radius: 1
+	radius: 1,
+	glow: true
 })
 export class SpecialSphere {
 	timer: number = 0;

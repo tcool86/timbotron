@@ -52,7 +52,7 @@ class Timbot {
 		if (buttonA) {
 			const normalizeMovement = this.lastMovement.normalize();
 			const multiplyMovement = normalizeMovement.multiply(new Vector3(200, 200, 200));
-			this.ammo[this.currentShot].body.setTranslation(new Vector3(entity.object.position.x, 2.5, entity.object.position.z));
+			this.ammo[this.currentShot].body.setTranslation(new Vector3(entity.object.position.x, 3, entity.object.position.z));
 			this.ammo[this.currentShot].body.setLinvel(multiplyMovement, true);
 			this.currentShot++;
 			this.currentShot = this.currentShot % 3;

@@ -26,10 +26,11 @@ class Timbotron {
 
 		create(GrassGround);
 		create(SimpleBox, { position: new Vector3(4, 4, 0) });
-		for (let i = 0; i < 30; i++) {
-			let x = (i > 15) ? i - 20 : -i;
-			const positionVector = new Vector3(5 + x, 10 + i, -10);
-			create(WoodBox, { position: positionVector });
+		for (let i = 0; i < 8; i++) {
+			for (let j = 0; j < 4; j++) {
+				const positionVector = new Vector3((j * 5) - 10, 20 + (i * 10), -10);
+				create(WoodBox, { position: positionVector });
+			}
 		}
 
 		create(SpecialSphere);
