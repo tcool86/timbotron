@@ -80,14 +80,10 @@ export class SimpleBox { }
 	glow: true
 })
 export class SpecialSphere {
-	timer: number = 0;
-
-	loop({ entity, delta }: any) {
-		this.timer += delta;
-		if (this.timer > 1) {
-			entity.body.applyImpulse(new Vector3(0, 20, 0));
-			this.timer = 0;
-		}
+	loop({ entity, frame }: any) {
+		frame(1, () => {
+			entity.body.applyImpulse(new Vector3(0, 20, 0), true);
+		});
 	}
 }
 
