@@ -9,19 +9,17 @@ import {
 	SimpleBox
 } from './gameObjects';
 
-const app = document.querySelector<HTMLDivElement>('#app')!;
-
 const { Game, Globals, Util } = Pyramid;
 const { Vector3 } = Util;
 
-const globals = new Globals({
+const globals = Globals.getInstance().setState({
 	score: 0,
 	player: { x: 0, z: 0 }
 });
 
-@Game({ app, globals })
+@Game({ app: '#app' })
 class Timbotron {
-	async setup({ commands }: any) {
+	async setup({ commands, camera }: any) {
 		const { create } = await commands;
 
 		create(GrassGround);
@@ -51,7 +49,8 @@ class Timbotron {
 				}
 			}
 		})
-		create(Timbot);
+		const player = await create(Timbot);
+		camera.followEntity(player);
 	}
 
 	loop({ inputs, game }: any) {
