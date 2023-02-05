@@ -47,10 +47,11 @@ export class TestStage {
 					trigger.hasEntered = false;
 				}
 			}
-		})
+		});
+		console.log(scene, world);
 	}
 
-	loop({ commands, scene, world }: any) {
+	loop({ }: any) {
 
 	}
 }
