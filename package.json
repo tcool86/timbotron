@@ -1,6 +1,8 @@
 {
   "name": "timbotron",
   "version": "0.0.1",
+  "author": "Tim Cool",
+  "license": "MIT",
   "scripts": {
     "start": "npx http-server ./dist",
     "dev": "vite --force",
