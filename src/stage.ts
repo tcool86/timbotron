@@ -1,4 +1,6 @@
-import Pyramid from 'pyramid-game-lib';
+import Pyramid, { GameEntity } from 'pyramid-game-lib';
+import { Entity } from 'pyramid-game-lib/dist/declarations/src/lib/Entities';
+import { PyramidParamsBase } from 'pyramid-game-lib/dist/declarations/src/lib/Game';
 import { Color } from 'three';
 import {
 	WoodBox,
@@ -15,12 +17,9 @@ const { Stage } = Pyramid;
 	name: "stage 1",
 	backgroundColor: new Color('#cce2cb')
 })
-export class TestStage {
+export class TestStage implements GameEntity<Entity> { //TODO: should be stage
 
-	// TODO: expose scene and world objects
-	async setup({ commands, scene, world }: any) {
-		const { create } = commands;
-
+	async setup({ create, scene, world }: PyramidParamsBase<Entity>) {
 		create(GrassGround);
 		create(SimpleBox, { position: new Vector3(4, 4, 0) });
 		for (let i = 0; i < 8; i++) {
@@ -51,7 +50,5 @@ export class TestStage {
 		console.log(scene, world);
 	}
 
-	loop({ }: any) {
-
-	}
+	loop({ }: PyramidParamsBase<Entity>) { }
 }

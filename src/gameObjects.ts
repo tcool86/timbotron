@@ -1,7 +1,10 @@
-import Pyramid from "pyramid-game-lib";
+import Pyramid, { GameEntity } from "pyramid-game-lib";
 import grassTest from './assets/grass.jpg?url';
 import woodTest from './assets/wood-box.jpg?url';
 import metalTest from './assets/metal-box.jpg?url';
+import { PyramidParamsBase } from "pyramid-game-lib/dist/declarations/src/lib/Game";
+import { Entity } from "pyramid-game-lib/dist/declarations/src/lib/Entities";
+import { TriggerEntity } from "pyramid-game-lib/dist/declarations/src/lib/Entities/Triggers";
 const { Vector3, Vector2 } = Pyramid.Util;
 const { Materials, Box, Sphere, Trigger, Collision } = Pyramid.Entity;
 
@@ -20,14 +23,14 @@ interface DestructibleBox {
 	depth: 2,
 	collisionKey: testCollisionKey
 })
-export class WoodBox implements DestructibleBox {
+export class WoodBox implements GameEntity<Entity>, DestructibleBox {
 	health = 1;
 	destroyed = false;
 
-	setup({ entity }: any) {
+	setup({ entity }: PyramidParamsBase<Entity>) {
 		console.log(`Entity: ${entity}`);
 	}
-	loop({ entity }: any) {
+	loop({ entity }: PyramidParamsBase<Entity>) {
 		if (this.health < 0 && !this.destroyed) {
 			this.destroyed = true;
 			entity.body.setAngvel(new Vector3(1000, 0, 0), true);
@@ -79,12 +82,14 @@ export class SimpleBox { }
 	radius: 1,
 	glow: true
 })
-export class SpecialSphere {
-	loop({ entity, frame }: any) {
+export class SpecialSphere implements GameEntity<Entity> {
+	loop({ entity, frame }: PyramidParamsBase<Entity>) {
 		frame(1, () => {
 			entity.body.applyImpulse(new Vector3(0, 20, 0), true);
 		});
 	}
+
+	setup({ }: PyramidParamsBase<Entity>) { }
 }
 
 @Trigger({
@@ -95,4 +100,14 @@ export class SpecialSphere {
 	height: 10,
 	depth: 15,
 })
-export class PlayerGoal { }
+export class PlayerGoal implements GameEntity<TriggerEntity> {
+	loop({ }: PyramidParamsBase<TriggerEntity>) {
+		// const entered = entity.hasEntered;
+		// const completion = globals.score >= 100;
+		// if (entered && completion) {
+		// 	globals.stageCompleteCondition = true;
+		// }
+	}
+
+	setup({ }: PyramidParamsBase<Entity>) { }
+}

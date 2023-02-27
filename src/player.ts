@@ -3,6 +3,8 @@ import idle from './models/idle.fbx?url';
 import gangnam from './models/gangnam-style.fbx?url';
 import run from './models/run.fbx?url';
 import { Bullet, testCollisionKey } from './gameObjects';
+import { GameActor, PyramidParamsBase } from "pyramid-game-lib/dist/declarations/src/lib/Game";
+import { PyramidActor } from "pyramid-game-lib/dist/declarations/src/lib/Entities/Actor";
 
 const { Actor, Collision } = Pyramid.Entity;
 const { Vector3 } = Pyramid.Util;
@@ -10,14 +12,13 @@ const { Vector3 } = Pyramid.Util;
 @Actor({
 	files: [idle, run, gangnam],
 })
-class Timbot {
+class Timbot implements GameActor {
 	ammo: any = [];
 	currentShot: number = 0;
 	lastMovement = new Vector3();
 	boxCount = 0;
 
-	async setup({ commands }: any) {
-		const { create } = await commands;
+	async setup({ create }: PyramidParamsBase<PyramidActor>) {
 		this.ammo.push(
 			await create(Bullet),
 			await create(Bullet),
@@ -25,7 +26,7 @@ class Timbot {
 		);
 	}
 
-	loop({ inputs, entity }: any) {
+	loop({ inputs, entity, globals }: PyramidParamsBase<PyramidActor>) {
 		const { horizontal, vertical, buttonA, buttonB } = inputs[0];
 		let movement = new Vector3();
 		movement.setX(horizontal * 10);
@@ -59,6 +60,7 @@ class Timbot {
 		}
 		if (buttonB) {
 			console.log("B Pressed");
+			console.log(globals);
 		}
 	}
 
